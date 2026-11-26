@@ -1,9 +1,14 @@
-# ULM: příprava na test 3
+# ULM: lekce, taháky a cvičné testy
 
-Statický web s lekcemi, taháky a cvičnými testy k předmětu ULM (VŠB).
+Statický web pro učení předmětu ULM (VŠB) na průběžné testy i na zkoušku. Témata přibývají postupně.
 
-- **Taháky:** pravidla přepisu, 9 kroků Skolemovy klauzulární formy, věty → klauzule, rezoluce a unifikace, Vennovy diagramy, teorie
-- **Lekce:** Skolemizace, 9 kroků, implikace a klauzule, unifikace, rezoluce sporem, Vennovy diagramy, formalizace
-- **Cvičné testy:** varianty A–K ve formátu a–d (+1 / −1 / 0) a 12 příkladů s řešením
+**Web:** https://mradikyt.github.io/ULM-Web/
+
+## Obsah
+
+- **Predikátová logika (PL1):** Skolemova klauzulární forma, unifikace, rezoluce sporem, formalizace vět, Vennovy diagramy
+  - taháky (`reference/`, `ulm-tahak.html`)
+  - lekce s kvízy (`lessons/0001`–`0008`)
+  - cvičné testy A–K ve formátu a–d (+1 / −1 / 0) a 12 příkladů s řešením
 
 Začni na `index.html`. Web je čisté HTML, CSS a JavaScript bez sestavování, takže běží přímo na GitHub Pages.
