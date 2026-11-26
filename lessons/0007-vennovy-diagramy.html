@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Lekce 7 · Vennovy diagramy</title>
-<link rel="stylesheet" href="../assets/course.css?v=3">
+<link rel="stylesheet" href="../assets/course.css?v=4">
 <style>.venns{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:12px 0 24px}.venns>div{text-align:center}.vcap{font-size:.95rem;line-height:1.45;text-align:left;margin-top:4px}</style>
 </head>
 <body>
@@ -90,7 +90,7 @@
 </footer>
 </main>
 
-<script src="../assets/venn.js"></script>
+<script src="../assets/venn.js?v=4"></script>
 <script>
 const A=["Po","Pr","E"],B=["S","L","P"],Cc=["Pr","O","J"];
 Venn.draw("a1",{labels:A,shade:["A","AC"],caption:"<b>1.</b> „Všechny Po mají Pr“ → Po <b>mimo</b> Pr je prázdné → šedá."});
@@ -103,7 +103,7 @@ Venn.draw("c1",{labels:Cc,shade:["C","BC"],caption:"<b>1.</b> Nejdřív věta s 
 Venn.draw("c2",{labels:Cc,shade:["C","BC"],line:[["AB","ABC"]],caption:"<b>2.</b> „Některé Pr jsou O“ → průnik Pr a O. Kruh J ho dělí na dvě volné části, nevíme do které → × <b>na čáru</b>."});
 Venn.draw("c3",{labels:Cc,shade:["C","BC"],line:[["AB","ABC"]],hi:["ABC"],caption:"<b>3. Závěr</b> „Některé J jsou O“: potřebuju × určitě v modré oblasti. × je na čáře, může být i mimo J. ✘ Neplatný."});
 </script>
-<script src="../assets/quiz.js"></script>
+<script src="../assets/quiz.js?v=4"></script>
 <script>
 const U=(a,b,z)=>`<div class="usudek">${a}<br>${b}<hr>${z}</div>`;
 const P=id=>`<div id="${id}"></div>`;
