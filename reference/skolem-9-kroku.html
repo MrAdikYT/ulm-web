@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reference · 9 kroků a Skolemizace</title>
+<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body>
+<main>
+<nav class="crumbs"><a href="../lessons/0001-skolemizace.html">Lekce 1: Skolemizace</a></nav>
+<header class="lesson">
+<div class="kicker">ULM · reference</div>
+<h1>Skolemova klauzulární forma</h1>
+<p class="lede">Algoritmus v 9 krocích, podle řešení cvičení 8.</p>
+</header>
+
+<div class="tw"><table>
+<tr><th>#</th><th>Krok</th><th>Co dělá</th><th>Zachovává</th></tr>
+<tr><td>1</td><td>Existenční uzávěr</td><td>volné proměnné uzavřít ∃ na začátku</td><td><b>jen splnitelnost</b></td></tr>
+<tr><td>2</td><td>Eliminace nadbytečných kvantifikátorů</td><td>vyhodit ∀x / ∃x, když x v dosahu není</td><td>ekvivalence</td></tr>
+<tr><td>3</td><td>Přejmenování proměnných</td><td>každý kvantifikátor má jinou proměnnou</td><td>ekvivalence</td></tr>
+<tr><td>4</td><td>Eliminace ⊃, ≡</td><td><span class="f">A⊃B → ¬A∨B</span>; <span class="f">A≡B → (¬A∨B)∧(¬B∨A)</span></td><td>ekvivalence</td></tr>
+<tr><td>5</td><td>Přesun ¬ dovnitř</td><td>De Morgan, <span class="f">¬∀ = ∃¬</span>, <span class="f">¬∃ = ∀¬</span></td><td>ekvivalence</td></tr>
+<tr><td>6</td><td>Kvantifikátory doprava</td><td><span class="f">Qx(A ∘ B(x)) ⇔ A ∘ QxB(x)</span></td><td>ekvivalence</td></tr>
+<tr><td>7</td><td>Eliminace ∃ (Skolemizace)</td><td>∃ → konstanta / funkce předchozích ∀</td><td><b>jen splnitelnost</b></td></tr>
+<tr><td>8</td><td>∀ doleva</td><td>všechny ∀ zpět na začátek</td><td>ekvivalence</td></tr>
+<tr><td>9</td><td>Distributivní zákony</td><td><span class="f">(A∧B)∨C ⇔ (A∨C)∧(B∨C)</span> → klauzule</td><td>ekvivalence</td></tr>
+</table></div>
+
+<div class="box rule">
+<p><b>Skolemizace (krok 7):</b></p>
+<ul>
+<li>žádné ∀ před ∃ → konstanta: <span class="f">∃x∀y P(x,y) → ∀y P(a,y)</span></li>
+<li>∀ před ∃ → funkce všech předchozích ∀: <span class="f">∀x∀y∃z P → ∀x∀y P(x,y,f(x,y))</span></li>
+<li>každé ∃ = nový symbol</li>
+</ul>
+</div>
+
+<h2>Vzorová řešení z cv8</h2>
+<div class="tw"><table>
+<tr><th>Formule</th><th>Výsledek</th></tr>
+<tr><td class="fb">∃x∀y∀z P(x,y,z)</td><td class="fb">∀y∀z P(a,y,z)</td></tr>
+<tr><td class="fb">∃x∃y∀z P(x,y,z)</td><td class="fb">∀z P(a,b,z)</td></tr>
+<tr><td class="fb">∀x∃y∀z P(x,y,z)</td><td class="fb">∀x∀z P(x,f(x),z)</td></tr>
+<tr><td class="fb">∃x∀y∃z P(x,y,z)</td><td class="fb">∀y P(a,y,f(y))</td></tr>
+<tr><td class="fb">∀x∃y∃z P(x,y,z)</td><td class="fb">∀x P(x,f(x),g(x))</td></tr>
+<tr><td class="fb">∀x∀y∃z P(x,y,z)</td><td class="fb">∀x∀y P(x,y,f(x,y))</td></tr>
+<tr><td class="fb">∀x∃y∀z∃v[P(z,y) ∧ Q(x,v)]</td><td class="fb">∀z∀x[P(z,a) ∧ Q(x,f(x))]</td></tr>
+<tr><td class="fb">∀x∃y∀z∃v[P(z,y) ⊃ Q(x,v)]</td><td class="fb">∀z∀x[¬P(z,a) ∨ Q(x,f(x))]</td></tr>
+<tr><td class="fb">∀x∃y∀z∃v[P(z,y) ∧ Q(x,y)]</td><td class="fb">∀x∀z[P(z,f(x)) ∧ Q(x,f(x))]</td></tr>
+<tr><td class="fb">∀x∃y∀z[(P(x,y) ⊃ Q(y,z)) ∨ Q(x,y)]</td><td class="fb">∀x∀z[¬P(x,f(x)) ∨ Q(f(x),z) ∨ Q(x,f(x))]</td></tr>
+</table></div>
+<p class="side">Zdroj: Cvičení 8 s řešením.</p>
+</main>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Věty na klauzule</title>
+<link rel="stylesheet" href="../assets/course.css">
+<style>td .f{font-size:1.05em}</style>
+</head>
+<body>
+<main>
+<nav class="crumbs"><a href="../lessons/0008-formalizace.html">← Lekce 8: Formalizace</a> · <a href="skolem-9-kroku.html">Reference: 9 kroků</a></nav>
+<header class="lesson">
+<div class="kicker">ULM · reference</div>
+<h1>Věty → formule → klauzule</h1>
+<p class="lede">Pět typů vět z cv7 a cv9. Poslední sloupec použiješ, když je věta <b>závěr</b> a ty ho neguješ.</p>
+</header>
+
+<table>
+<tr><th>věta</th><th>formule</th><th>klauzule (předpoklad)</th><th>klauzule negovaného závěru</th></tr>
+<tr><td>Každý A je B</td><td><span class="f">∀x(A(x) ⊃ B(x))</span></td><td><span class="f">¬A(x) ∨ B(x)</span></td><td><span class="f">A(a)</span>, <span class="f">¬B(a)</span></td></tr>
+<tr><td>Žádný A není B</td><td><span class="f">∀x(A(x) ⊃ ¬B(x))</span></td><td><span class="f">¬A(x) ∨ ¬B(x)</span></td><td><span class="f">A(a)</span>, <span class="f">B(a)</span></td></tr>
+<tr><td>Některý A je B</td><td><span class="f">∃x(A(x) ∧ B(x))</span></td><td><span class="f">A(a)</span>, <span class="f">B(a)</span></td><td><span class="f">¬A(x) ∨ ¬B(x)</span></td></tr>
+<tr><td>Některý A není B</td><td><span class="f">∃x(A(x) ∧ ¬B(x))</span></td><td><span class="f">A(a)</span>, <span class="f">¬B(a)</span></td><td><span class="f">¬A(x) ∨ B(x)</span></td></tr>
+<tr><td>Pouze A jsou B</td><td><span class="f">∀x(B(x) ⊃ A(x))</span></td><td><span class="f">¬B(x) ∨ A(x)</span></td><td><span class="f">B(a)</span>, <span class="f">¬A(a)</span></td></tr>
+</table>
+
+<div class="box rule">
+<p><b>Tři pravidla, ze kterých tabulka plyne:</b></p>
+<p>1. ∀ jde s ⊃, ∃ jde s ∧.</p>
+<p>2. V klauzuli: ∀ → <b>proměnná</b> x, ∃ → <b>konstanta</b> a (nová pro každé ∃).</p>
+<p>3. Negace otočí kvantifikátor (¬∀ → ∃¬, ¬∃ → ∀¬) a De Morgan otočí spojku (¬(A ∧ B) → ¬A ∨ ¬B).</p>
+</div>
+<p class="side">Všimni si: negace „Každý A je B“ je „Některý A není B“ a negace „Žádný A není B“ je „Některý A je B“. Proto jsou v řádcích 1 a 4 (a 2 a 3) stejné klauzule, jen prohozené.</p>
+<p class="side">Konstanta a ve sloupci negovaného závěru musí být <b>nová</b>. Když předpoklady už mají a, napiš b.</p>
+</main>
+</body>
+</html>

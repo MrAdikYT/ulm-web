@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lekce 5 · Rezoluce sporem</title>
+<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body>
+<main>
+<nav class="crumbs"><a href="0004-unifikace.html">← Lekce 4: Unifikace</a> · <a href="../reference/skolem-9-kroku.html">Reference: 9 kroků</a> · <a href="../ulm-tahak.html">Velký tahák</a></nav>
+
+<header class="lesson">
+<div class="kicker">ULM · test 3 · lekce 5 ze 5</div>
+<h1>Rezoluce sporem: všechno dohromady</h1>
+<p class="lede">Asi 15 minut. Klauzule, Skolemizace i unifikace už umíš. Teď z nich složíš důkaz.</p>
+</header>
+
+<p class="win"><b>Na konci lekce umíš:</b> rozhodnout rezolucí, jestli závěr z předpokladů vyplývá, a zapsat to tak, jak to chce vyučující.</p>
+
+<h2>Myšlenka: důkaz sporem</h2>
+<p>Chceš ukázat, že závěr <b>Z</b> vyplývá z předpokladů. Řekneš: „Dobře, ať Z <b>neplatí</b>.“ Přidáš <b>¬Z</b> k předpokladům. Když z toho dostaneš <b>spor</b>, znamená to, že Z neplatit nemůže. Tedy <b>vyplývá</b>.</p>
+<p>Spor v rezoluci je <b>prázdná klauzule #</b>. Vznikne, když proti sobě škrtneš <span class="f">P(a)</span> a <span class="f">¬P(a)</span> a nic nezbude.</p>
+
+<h2>Rezoluční pravidlo</h2>
+<div class="box rule">
+<p class="fb">P(…) ∨ <i>zbytek1</i> &nbsp;a&nbsp; ¬P(…) ∨ <i>zbytek2</i> &nbsp;⟶&nbsp; <i>zbytek1</i> ∨ <i>zbytek2</i></p>
+<p>Nové klauzuli vpravo se říká <b>rezolventa</b>: nový řádek, který vznikne ze dvou starých.</p>
+<p>Dvojici <span class="f">P</span> a <span class="f">¬P</span> škrtneš, zbytky spojíš ∨. Když se argumenty P liší, nejdřív je <b>unifikuješ</b> a substituci dosadíš do <b>celé</b> nové klauzule.</p>
+</div>
+<p>Příklad: <span class="f">¬P(x) ∨ Q(x)</span> a <span class="f">P(f(y))</span>. Unifikace <span class="f">x/f(y)</span>. Škrtneš P, zbyde <span class="fb">Q(f(y))</span>. Q dostalo f(y) taky, protože se dosazuje všude.</p>
+
+<h2>Postup (5 kroků)</h2>
+<div class="box rule">
+<ol>
+<li><b>Neguj závěr</b> (řádek pod čarou): Z → ¬Z. Předpoklady (řádky nad čarou) <b>neneguješ</b>, jen je v kroku 2 převedeš na klauzule.</li>
+<li><b>Každou formuli zvlášť</b> převeď na klauzule (9 kroků). Každé ∃ dostane <b>nový</b> Skolemův symbol, i když je v jiné formuli.</li>
+<li><b>Přejmenuj proměnné</b>, ať každá klauzule má svoje (x, y, z…). Každá klauzule má svoje vlastní ∀.</li>
+<li><b>Rezolvuj</b> dvojice klauzulí s P a ¬P. Novou klauzuli očísluj a napiš, z čeho vznikla a jaká byla substituce.</li>
+<li>Vyšlo <b>#</b> → závěr <b>vyplývá</b>. Nic nového už nejde odvodit a # nikde → <b>nevyplývá</b>.</li>
+</ol>
+</div>
+
+<div class="box trap">
+<p><b>Dva typy úloh (cv9):</b></p>
+<p><b>Příklad 1, úsudek</b> (předpoklady, čára, závěr): neguješ <b>jen závěr</b>. Předpoklady převedeš na klauzule tak, jak jsou.</p>
+<p><b>Příklad 2, „ověřte logickou platnost formule“</b>: žádná čára tam není. Neguješ <b>celou formuli</b>: <span class="f">¬[ … ]</span>. Pak převedeš na klauzule. Vyjde # → formule je logicky platná.</p>
+</div>
+
+<h2>Příklad 1</h2>
+<p>Každý člověk je smrtelný. Sokrates je člověk. ⊨ Sokrates je smrtelný.</p>
+<table>
+<tr><th>#</th><th>klauzule</th><th>odkud</th></tr>
+<tr><td>1</td><td><span class="f">¬C(x) ∨ S(x)</span></td><td>∀x(C(x) ⊃ S(x)), krok 4</td></tr>
+<tr><td>2</td><td><span class="f">C(s)</span></td><td>předpoklad</td></tr>
+<tr><td>3</td><td><span class="f">¬S(s)</span></td><td><b>negovaný závěr</b></td></tr>
+<tr><td>4</td><td><span class="f">¬C(s)</span></td><td>1 + 3, <span class="f">x/s</span></td></tr>
+<tr><td>5</td><td><span class="f">#</span></td><td>4 + 2</td></tr>
+</table>
+<p>Vyšel # → <b>vyplývá</b>.</p>
+
+<h2>Příklad 2: se Skolemizací</h2>
+<p>Někdo má rád všechny. ⊨ Každého má někdo rád.</p>
+<p class="fb">∃x∀y R(x, y) &nbsp;⊨&nbsp; ∀y∃x R(x, y)</p>
+<ol>
+<li>Předpoklad: ∃x před sebou nemá ∀ → <span class="f">x := a</span>. Klauzule 1: <span class="fb">R(a, y)</span></li>
+<li>Negovaný závěr: <span class="f">¬∀y∃x R(x, y)</span> → <span class="f">∃y∀x ¬R(x, y)</span>. ∃y → <b>nová</b> konstanta <span class="f">b</span> (ne a!). Klauzule 2: <span class="fb">¬R(x, b)</span></li>
+<li>1 + 2: unifikace <span class="f">x/a, y/b</span> → <span class="f">R(a, b)</span> proti <span class="f">¬R(a, b)</span> → <b>#</b>. Vyplývá.</li>
+</ol>
+<p class="side">Kdybys dal v kroku 2 zase <b>a</b>, byla by to chyba. Dvě různá ∃ nikdy nesdílí stejný symbol, ani když jsou v různých formulích.</p>
+
+<div class="box trap">
+<p><b>Past (jako cv8 4b):</b> „Všechny stoly jsou dřevěné. ⊨ Nějaký stůl je dřevěný.“ <b>Nevyplývá!</b> Věta s ∀ netvrdí, že nějaký stůl existuje. Klauzule:</p>
+<p>1. <span class="f">¬St(x) ∨ D(x)</span> &nbsp; 2. <span class="f">¬St(y) ∨ ¬D(y)</span> (negace ∃x(St(x) ∧ D(x)))</p>
+<p>1 + 2, <span class="f">y/x</span> → <span class="f">¬St(x)</span>. A dál už nic: nikde není kladné <span class="f">St(…)</span>, se kterým by šlo škrtnout. # nevznikne → <b>nevyplývá</b>.</p>
+</div>
+
+<details class="recall"><summary>Zkus sám (na papír), pak rozklikni</summary>
+<p>Každý student se učí. Kdo se učí, projde. Petr je student. ⊨ Petr projde.</p>
+<p>Klauzule: 1. <span class="f">¬St(x) ∨ U(x)</span> · 2. <span class="f">¬U(y) ∨ Pr(y)</span> · 3. <span class="f">St(p)</span> · 4. <span class="f">¬Pr(p)</span> (negovaný závěr)</p>
+<p>5. <span class="f">¬U(p)</span> z 2 + 4, y/p · 6. <span class="f">¬St(p)</span> z 1 + 5, x/p · 7. <span class="f">#</span> z 6 + 3. <b>Vyplývá.</b></p>
+</details>
+
+<h2>Procvič</h2>
+<p>Přečti všechny možnosti, teprve pak klikni.</p>
+<div class="quiz" id="q5"></div>
+
+
+<footer class="lesson">
+<p><b>Primární zdroj:</b> Cvičení 8 s řešením, úloha 4: 4a vyplývá, 4b nevyplývá. Přesně v zápisu, jaký chce vyučující.</p>
+<p><b>Další:</b> <a href="0006-cvicny-test.html">Cvičný test a–d</a> · <a href="../ulm-tahak.html">Velký tahák</a> · <a href="../reference/skolem-9-kroku.html">Reference: 9 kroků</a></p>
+</footer>
+</main>
+
+<script src="../assets/quiz.js"></script>
+<script>
+Quiz.mount("q5",[
+ {q:"U úsudku P1, P2 ⊨ Z uděláš jako první:",
+  a:["znegovat závěr Z","znegovat P1 a P2","znegovat P1, P2 i Z"], ok:0,
+  why:"Neguje se jen závěr. Předpoklady zůstanou, jak jsou."},
+ {q:"Kdy závěr <b>vyplývá</b>?",
+  a:["když # odvodit nejde","když odvodíme #","když zbude jedna klauzule"], ok:1,
+  why:"# = spor. Spor znamená, že ¬Z nemůže platit, takže Z vyplývá."},
+ {q:"Kus tabulky:<br>1. <span class='f'>¬P(x) ∨ Q(x)</span><br>2. <span class='f'>P(a)</span><br>Co napíšeš na řádek 3 (z 1 + 2)?",
+  a:["<span class='f'>¬Q(a)</span>","<span class='f'>Q(x)</span>","<span class='f'>Q(a)</span>"], ok:2,
+  why:"x/a, škrtne se P. Zbyde Q(x) a x/a se dosadí i sem → Q(a)."},
+ {q:"Kus tabulky:<br>1. <span class='f'>P(x) ∨ R(x)</span><br>2. <span class='f'>¬P(f(y)) ∨ S(y)</span><br>Co napíšeš na řádek 3 (z 1 + 2)?",
+  a:["<span class='f'>R(x) ∨ S(y)</span>","<span class='f'>R(f(y)) ∨ S(y)</span>","<span class='f'>R(f(y)) ∨ S(f(y))</span>"], ok:1,
+  why:"x/f(y). Dosadí se za x, takže R(f(y)). S(y) nemá x, zůstane S(y)."},
+ {q:"Negovaný závěr <span class='f'>∀x(P(x) ⊃ Q(x))</span> dá klauzule:",
+  a:["<span class='f'>P(a)</span> a <span class='f'>¬Q(a)</span>","<span class='f'>¬P(x) ∨ Q(x)</span>","<span class='f'>P(x)</span> a <span class='f'>¬Q(x)</span>"], ok:0,
+  why:"¬∀x(¬P ∨ Q) → ∃x(P ∧ ¬Q) → Skolem x := a → dvě klauzule P(a), ¬Q(a)."},
+ {q:"Předpoklad už použil konstantu a. Negovaný závěr má ∃ bez ∀ před sebou. Dosadíš:",
+  a:["znovu konstantu a","novou konstantu b","proměnnou x místo ní"], ok:1,
+  why:"Každé ∃ dostane nový symbol, i v jiné formuli. Stejné a by bylo chybné tvrzení „je to ten samý prvek“."},
+ {q:"Proč mají různé klauzule různé proměnné?",
+  a:["aby vyšla prázdná klauzule","protože to chce Skolemizace","každá klauzule má svoje ∀"], ok:2,
+  why:"x v klauzuli 1 a x v klauzuli 2 nemají nic společného. Přejmenování brání tomu, aby se substituce spletly."},
+ {q:"Kus tabulky:<br>1. <span class='f'>P(a)</span><br>2. <span class='f'>¬P(b)</span><br>Co z řádků 1 + 2 vznikne?",
+  a:["vznikne #","nejde rezolvovat","vznikne P(b)"], ok:1,
+  why:"a a b jsou různé konstanty, unifikace nejde, takže nejde ani škrtat."},
+ {q:"Opakování: unifikuj <span class='f'>P(x, g(x))</span> a <span class='f'>P(f(y), g(z))</span>:",
+  a:["<span class='f'>x/f(y), z/f(y)</span>","<span class='f'>x/f(y), z/y</span>","nejde unifikovat"], ok:0,
+  why:"x/f(y) → vlevo P(f(y), g(f(y))). Pak g(f(y)) proti g(z) → z/f(y)."},
+ {q:"Opakování: krok 9 (roznásobení) zachovává:",
+  a:["jen splnitelnost formule","plnou ekvivalenci formule","nic, mění význam formule"], ok:1,
+  why:"Jen splnitelnost mají jen kroky s ∃: 1 a 7. Roznásobení je ekvivalence."}
+]);
+</script>
+</body>
+</html>

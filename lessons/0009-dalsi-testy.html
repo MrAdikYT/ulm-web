@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Další cvičné testy</title>
+<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body>
+<main>
+<nav class="crumbs"><a href="0006-cvicny-test.html">← Cvičný test A a B</a> · <a href="../reference/vety-klauzule.html">Tahák: věty → klauzule</a> · <a href="../reference/skolem-9-kroku.html">Tahák: 9 kroků</a></nav>
+
+<header class="lesson">
+<div class="kicker">ULM · test 3 · generálka 2</div>
+<h1>Další cvičné testy: varianty C–G</h1>
+<p class="lede">Pět variant po 3 otázkách, každá na jiné téma. U každého tvrzení dej P, N, nebo nic. Správně +1, špatně −1, nic 0. Formule si piš na papír.</p>
+</header>
+
+<table>
+<tr><th>varianta</th><th>téma</th></tr>
+<tr><td><a href="#vC">C</a></td><td>teorie, jako otázky ve vzorovém testu 1</td></tr>
+<tr><td><a href="#vD">D</a></td><td>Skolemizace a 9 kroků</td></tr>
+<tr><td><a href="#vE">E</a></td><td>unifikace a rezolventy</td></tr>
+<tr><td><a href="#vF">F</a></td><td>slovní úsudky, formalizace, Venn</td></tr>
+<tr><td><a href="#vG">G</a></td><td>negace a pasti</td></tr>
+</table>
+
+<h2 id="vC">Varianta C: teorie</h2>
+<div id="tC"></div>
+<h2 id="vD">Varianta D: Skolemizace a 9 kroků</h2>
+<div id="tD"></div>
+<h2 id="vE">Varianta E: unifikace a rezolventy</h2>
+<div id="tE"></div>
+<h2 id="vF">Varianta F: úsudky, formalizace, Venn</h2>
+<div id="tF"></div>
+<h2 id="vG">Varianta G: negace a pasti</h2>
+<div id="tG"></div>
+
+
+<footer class="lesson">
+<p><b>Primární zdroj:</b> Cvičení 8 s řešením, cvičení 9, cvičení 7.</p>
+<p><b>Lekce:</b> <a href="0001-skolemizace.html">1</a> · <a href="0002-devet-kroku.html">2</a> · <a href="0003-implikace-klauzule.html">3</a> · <a href="0004-unifikace.html">4</a> · <a href="0005-rezoluce-sporem.html">5</a> · <a href="0006-cvicny-test.html">test A, B</a> · <a href="0007-vennovy-diagramy.html">7 Venn</a> · <a href="0008-formalizace.html">8 Formalizace</a></p>
+</footer>
+</main>
+
+<script src="../assets/tftest.js"></script>
+<script>
+const f=s=>`<span class='f'>${s}</span>`;
+TfTest.mount("tC",[
+ {q:"Zápis "+f("P1, P2 ⊨ Z")+" říká, že:",
+  items:[
+   {t:"Z logicky vyplývá z P1 a P2.", ok:true, why:"Přesně to ⊨ znamená."},
+   {t:"Množina "+f("{P1, P2, ¬Z}")+" je nesplnitelná.", ok:true, why:"To je princip rezoluce sporem: předpoklady + negace závěru dají spor."},
+   {t:"Formule "+f("P1 ∧ P2 ∧ Z")+" je nesplnitelná.", ok:false, why:"Nesplnitelná je s ¬Z, ne se Z."},
+   {t:"Formule "+f("(P1 ∧ P2) ⊃ Z")+" je logicky platná.", ok:true, why:"Úsudek je platný právě tehdy, když je implikace „předpoklady ⊃ závěr“ logicky platná."}
+  ]},
+ {q:"Skolemova klauzulární forma formule A:",
+  items:[
+   {t:"je logicky ekvivalentní s A.", ok:false, why:"Kroky 1 a 7 zachovávají jen splnitelnost."},
+   {t:"je splnitelná, právě když je splnitelná A.", ok:true, why:"To je přesně to, co zachovává."},
+   {t:"neobsahuje existenční kvantifikátory.", ok:true, why:"Skolemizace ∃ odstraní."},
+   {t:"obsahuje jen spojky ⊃ a ∧.", ok:false, why:"⊃ zmizí v kroku 4. Zbydou ¬, ∨ (v klauzulích) a ∧ (mezi nimi)."}
+  ]},
+ {q:"Rezoluční metoda v PL1:",
+  items:[
+   {t:"Při ověření úsudku se neguje závěr.", ok:true, why:"Předpoklady zůstanou, neguje se jen závěr."},
+   {t:"Při ověření logické platnosti formule se neguje celá formule.", ok:true, why:"cv9 příklad 2."},
+   {t:"Klauzule "+f("P(a)")+" a "+f("¬P(b)")+" se dají rezolvovat, protože obě mají P.", ok:false, why:"a a b jsou různé konstanty, unifikace nejde."},
+   {t:"Dvě různé klauzule smí sdílet proměnnou x se stejným významem.", ok:false, why:"Každá klauzule má svoje ∀. Proměnné se přejmenují (x₁, x₂…)."}
+  ]}
+]);
+TfTest.mount("tD",[
+ {q:"Formule "+f("∃x ∀y ∃z P(x, y, z)")+":",
+  items:[
+   {t:"Po Skolemizaci "+f("∀y P(a, y, f(y))")+".", ok:true, why:"x nemá před sebou ∀ → a. z má před sebou ∀y → f(y)."},
+   {t:"Po Skolemizaci "+f("∀y P(a, y, f(a))")+".", ok:false, why:"Argumenty funkce jsou ∀-proměnné před ∃, tedy y, ne konstanta a."},
+   {t:"z se nahradí funkcí, protože před ∃z stojí ∀y.", ok:true, why:"Pravidlo 2 Skolemizace."},
+   {t:"x se nahradí funkcí "+f("f(y)")+".", ok:false, why:"∃x stojí úplně vlevo, před ním žádné ∀ → konstanta."}
+  ]},
+ {q:"Kroky algoritmu Skolemovy klauzulární formy:",
+  items:[
+   {t:"Krok 5 přesouvá negaci dovnitř.", ok:true, why:"4 ⊃ a ≡ pryč, 5 ¬ dovnitř."},
+   {t:"Krok 6 přesouvá kvantifikátory doleva.", ok:false, why:"Krok 6 je doprava (před Skolemizací). Doleva jde ∀ až v kroku 8."},
+   {t:"Krok 8 přesouvá ∀ doleva.", ok:true, why:"Po Skolemizaci zbyly jen ∀ a jdou dopředu."},
+   {t:"Krok 9 (distributivita) zachovává jen splnitelnost.", ok:false, why:"Je to ekvivalence. Jen splnitelnost: kroky 1 a 7."}
+  ]},
+ {q:"Převod "+f("∀x(P(x) ⊃ (Q(x) ∧ R(x)))")+" na klauzule:",
+  items:[
+   {t:"Po kroku 4: "+f("¬P(x) ∨ (Q(x) ∧ R(x))")+".", ok:true, why:"A ⊃ B → ¬A ∨ B."},
+   {t:"Výsledek je jedna klauzule "+f("¬P(x) ∨ Q(x) ∨ R(x)")+".", ok:false, why:"Q ∧ R se nedá jen tak přepsat na ∨. Je potřeba roznásobit."},
+   {t:"Výsledek: "+f("¬P(x) ∨ Q(x)")+" a "+f("¬P(x) ∨ R(x)")+".", ok:true, why:"¬P(x) se rozdá do obou: dvě klauzule."},
+   {t:"Při Skolemizaci vznikne konstanta a.", ok:false, why:"Ve formuli není žádné ∃, Skolemizace nic nedělá."}
+  ]}
+]);
+TfTest.mount("tE",[
+ {q:"Unifikace "+f("P(f(x), y)")+" a "+f("P(z, g(z))")+":",
+  items:[
+   {t:"Literály lze unifikovat.", ok:true, why:"z/f(x), pak y/g(f(x))."},
+   {t:"Substituce obsahuje "+f("f(x)/z")+".", ok:false, why:"Dosazuje se ZA proměnnou: z/f(x)."},
+   {t:"Substituce obsahuje "+f("z/f(x)")+".", ok:true, why:"f(x) proti z, z je proměnná."},
+   {t:"Po unifikaci jsou oba literály "+f("P(f(x), g(f(x)))")+".", ok:true, why:"z/f(x) se dosadí i do g(z), takže y/g(f(x))."}
+  ]},
+ {q:"Řádky: 1. "+f("¬P(x) ∨ Q(f(x))")+" &nbsp; 2. "+f("P(a) ∨ R(b)")+". Rezoluce 1 + 2:",
+  items:[
+   {t:"Použitá substituce je "+f("x/a")+".", ok:true, why:"¬P(x) proti P(a)."},
+   {t:"Rezolventa je "+f("Q(f(x)) ∨ R(b)")+".", ok:false, why:"x/a se dosadí do celého řádku: Q(f(a))."},
+   {t:"Rezolventa je "+f("Q(f(a)) ∨ R(b)")+".", ok:true, why:"Škrtne se P, zbytky se spojí ∨, x je a."},
+   {t:"Rezolventa je prázdná klauzule #.", ok:false, why:"Zbyly Q i R, není prázdná."}
+  ]},
+ {q:"Které dvojice lze unifikovat?",
+  items:[
+   {t:f("P(a, x)")+" a "+f("P(y, b)")+": y/a, x/b.", ok:true, why:"Dvě proměnné, každá dostane konstantu."},
+   {t:f("P(x, f(x))")+" a "+f("P(a, f(b))")+".", ok:false, why:"x/a → f(a) proti f(b) → a proti b, nejde."},
+   {t:f("P(g(x))")+" a "+f("P(g(g(a)))")+": x/g(a).", ok:true, why:"Stejné g, dovnitř: x proti g(a)."},
+   {t:f("P(x)")+" a "+f("P(g(x))")+".", ok:false, why:"x proti g(x), funkce obsahuje x. Zakázané."}
+  ]}
+]);
+TfTest.mount("tF",[
+ {q:"Úsudek: <i>Každý, kdo studuje (S), projde (Pr). Petr (p) neprošel.</i> ⟶ <i>Petr nestuduje.</i>",
+  items:[
+   {t:"Úsudek je platný.", ok:true, why:"1. ¬S(x) ∨ Pr(x), 2. ¬Pr(p), 3. S(p). 1 + 3, x/p: Pr(p). S 2: #."},
+   {t:"Klauzule negovaného závěru je "+f("S(p)")+".", ok:true, why:"Závěr ¬S(p), negace ¬¬S(p) = S(p)."},
+   {t:"Klauzule negovaného závěru je "+f("¬S(p)")+".", ok:false, why:"To je závěr sám, ne jeho negace."},
+   {t:"Petr je proměnná, za kterou se dosazuje.", ok:false, why:"Jméno = konstanta p. Dosazuje se za x."}
+  ]},
+ {q:"Formalizace:",
+  items:[
+   {t:"„Pouze členové (Č) mají přístup (P)“ = "+f("∀x(P(x) ⊃ Č(x))")+".", ok:true, why:"Pouze = obráceně: kdo má přístup, je člen."},
+   {t:"„Žádný pták není savec“ = "+f("∀x(Pt(x) ⊃ ¬S(x))")+".", ok:true, why:"Každý pták není savec."},
+   {t:"„Někteří ptáci létají“ = "+f("∃x(Pt(x) ⊃ L(x))")+".", ok:false, why:"∃ jde s ∧. S ⊃ by to splnil i stůl."},
+   {t:"„Každý pes je savec“ = "+f("∀x(P(x) ∧ S(x))")+".", ok:false, why:"∀ jde s ⊃. S ∧ by to znamenalo, že všechno je pes."}
+  ]},
+ {q:"Vennův diagram: <i>Všichni psi jsou savci. Žádný savec není ryba.</i> ⟶ <i>Žádný pes není ryba.</i>",
+  items:[
+   {t:"Úsudek je platný.", ok:true, why:"Pes ∩ ryba je celé šedé: část mimo savce z 1. věty, část v savcích z 2. věty."},
+   {t:"V diagramu je aspoň jeden ×.", ok:false, why:"Obě věty jsou „všichni / žádný“, jen šedá."},
+   {t:"Oblast „pes a zároveň ryba“ je celá šedá.", ok:true, why:"Proto je závěr „žádný“ platný."},
+   {t:"Bez 1. předpokladu by úsudek zůstal platný.", ok:false, why:"Pes ∩ ryba mimo savce by byl bílý, mohl by tam někdo být."}
+  ]}
+]);
+TfTest.mount("tG",[
+ {q:"Negace:",
+  items:[
+   {t:f("¬∀x P(x)")+" je ekvivalentní "+f("∃x ¬P(x)")+".", ok:true, why:"Negace otočí ∀ na ∃."},
+   {t:f("¬∃x P(x)")+" je ekvivalentní "+f("∃x ¬P(x)")+".", ok:false, why:"¬∃ → ∀¬, kvantifikátor se musí otočit."},
+   {t:f("¬(A ⊃ B)")+" je ekvivalentní "+f("¬A ∧ B")+".", ok:false, why:"¬(A ⊃ B) = A ∧ ¬B."},
+   {t:f("¬∃x(P(x) ∧ Q(x))")+" je ekvivalentní "+f("∀x(¬P(x) ∨ ¬Q(x))")+".", ok:true, why:"¬∃ → ∀, De Morgan ∧ → ∨."}
+  ]},
+ {q:"Závěr „Všichni studenti (S) jsou chytří (Ch)“ zneguješ a převedeš na klauzule:",
+  items:[
+   {t:"Vznikne jedna klauzule "+f("S(a) ∨ ¬Ch(a)")+".", ok:false, why:"Je tam ∧, takže dvě klauzule: S(a) a ¬Ch(a)."},
+   {t:"Po negaci je tam ∃, takže vznikne konstanta.", ok:true, why:"¬∀x(S ⊃ Ch) → ∃x(S ∧ ¬Ch)."},
+   {t:"Vzniknou klauzule "+f("S(a)")+" a "+f("¬Ch(a)")+".", ok:true, why:"Skolem x := a, ∧ rozdělí na dvě klauzule."},
+   {t:"Vznikne klauzule "+f("¬S(x) ∨ Ch(x)")+".", ok:false, why:"To je klauzule nenegované věty."}
+  ]},
+ {q:"Úsudek: <i>Všichni studenti jsou chytří.</i> ⟶ <i>Někteří studenti jsou chytří.</i>",
+  items:[
+   {t:"Klauzule předpokladu je "+f("¬S(x) ∨ Ch(x)")+".", ok:true, why:"∀x(S ⊃ Ch), krok 4."},
+   {t:"Úsudek je platný.", ok:false, why:"Věta s ∀ netvrdí, že nějaký student existuje (cv8 4b, stoly)."},
+   {t:"Klauzule negovaného závěru je "+f("¬S(y) ∨ ¬Ch(y)")+".", ok:true, why:"¬∃(S ∧ Ch) → ∀(¬S ∨ ¬Ch)."},
+   {t:"Rezolucí se odvodí #.", ok:false, why:"Vyjde jen ¬S(x) a dál nic, kladné S(…) chybí."}
+  ]}
+]);
+</script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Postup rezoluce</title>
+<link rel="stylesheet" href="../assets/course.css">
+<style>
+td .f{font-size:1.08em}
+ol.steps>li{margin:8px 0}
+pre.res{font-family:var(--mono);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px 16px;line-height:1.7;overflow-x:auto}
+</style>
+</head>
+<body>
+<main>
+<nav class="crumbs"><a href="../index.html">← Rozcestník</a> · <a href="pravidla-prepisu.html">Pravidla přepisu</a> · <a href="vety-klauzule.html">Věty → klauzule</a> · <a href="skolem-9-kroku.html">9 kroků</a></nav>
+<header class="lesson">
+<div class="kicker">ULM · reference</div>
+<h1>Rezoluce sporem a unifikace: postup</h1>
+<p class="lede">Celá úloha z cv9 od zadání po #. Krok po kroku, jak to píšeš na papír.</p>
+</header>
+
+<h2>A. Rezoluce sporem: 6 kroků</h2>
+<ol class="steps">
+<li><b>Formalizuj</b> předpoklady a závěr (∀ s ⊃, ∃ s ∧).</li>
+<li><b>Neguj</b>:
+ <ul>
+ <li>úsudek → neguješ <b>jen závěr</b> (řádek pod čarou),</li>
+ <li>„je formule logicky platná?“ → neguješ <b>celou formuli</b>.</li>
+ </ul></li>
+<li><b>Převeď na klauzule</b> každý řádek zvlášť (9 kroků). ∀ → proměnná, ∃ → konstanta / funkce. Každé ∃ dostane <b>nový</b> symbol (a, b, c, f, g…).</li>
+<li><b>Očísluj</b> klauzule 1, 2, 3… a <b>přejmenuj proměnné</b>, aby každá klauzule měla své (x, y, z nebo x₁, x₂…).</li>
+<li><b>Rezolvuj</b>: najdi dvojici, kde je <span class="f">L</span> v jedné a <span class="f">¬L</span> v druhé. Unifikuj, škrtni je, zbytek obou spoj ∨ a <b>dosaď substituci do celého zbytku</b>. Nový řádek očísluj.</li>
+<li><b>Vyhodnoť</b>: vyšla <span class="f">#</span> (prázdná klauzule) → spor → závěr <b>vyplývá</b>, úsudek platný / formule platná. Nic nového už nejde odvodit a # nikde → <b>nevyplývá</b>.</li>
+</ol>
+
+<h2>B. Jak vypadá zápis</h2>
+<p>Úsudek: <i>Každý student čte nějakou knihu. Petr je student.</i> ⟶ <i>Existuje kniha.</i></p>
+<pre class="res">P1: ∀x(S(x) ⊃ ∃y(K(y) ∧ Č(x, y)))
+P2: S(p)
+¬Z: ¬∃y K(y)  =  ∀y ¬K(y)
+------------------------------------------------
+1. ¬S(x) ∨ K(f(x))          (P1, y → f(x), protože před ∃y je ∀x)
+2. ¬S(x) ∨ Č(x, f(x))       (P1, druhá půlka po roznásobení)
+3. S(p)                     (P2)
+4. ¬K(y)                    (¬Z)
+5. K(f(p))                  1 + 3, x/p
+6. #                        4 + 5, y/f(p)</pre>
+<p>Vyšla # → úsudek je <b>platný</b>.</p>
+
+<h2>C. Unifikace: algoritmus</h2>
+<p>Porovnávej oba literály <b>zleva doprava</b>, argument po argumentu:</p>
+<table>
+<tr><th>porovnávám</th><th>co udělám</th></tr>
+<tr><td>proměnná x proti čemukoli t</td><td><span class="f">x/t</span> a dosadím <b>všude</b> v obou literálech. Pozor: t nesmí obsahovat x (<span class="f">x</span> proti <span class="f">f(x)</span> nejde).</td></tr>
+<tr><td>konstanta proti stejné konstantě</td><td>OK, jdu dál</td></tr>
+<tr><td>konstanta a proti konstantě b</td><td><b>nejde</b> unifikovat</td></tr>
+<tr><td><span class="f">f(…)</span> proti <span class="f">f(…)</span></td><td>jdu <b>dovnitř</b> a porovnám argumenty</td></tr>
+<tr><td><span class="f">f(…)</span> proti <span class="f">g(…)</span> nebo proti konstantě</td><td><b>nejde</b></td></tr>
+<tr><td>různé predikáty (P proti Q)</td><td><b>nejde</b>, nemá smysl je rezolvovat</td></tr>
+</table>
+<p class="side">Zápis substituce: <b>proměnná / co za ni dosadím</b>, např. <span class="f">x/a</span>, <span class="f">y/f(z)</span>. Nikdy <span class="f">a/x</span>, konstanta se nenahrazuje.</p>
+
+<h2>D. Kontrolní seznam (nejčastější chyby)</h2>
+<div class="box trap">
+<p>☐ Negoval jsem <b>jen závěr</b> (u úsudku)?</p>
+<p>☐ Po negaci jsem otočil ∀↔∃ <b>než</b> jsem Skolemizoval? (¬∀ → ∃ → konstanta, ¬∃ → ∀ → proměnná)</p>
+<p>☐ ∃ v <b>předpokladech</b> jsem taky nahradil konstantou?</p>
+<p>☐ Každé ∃ má <b>nový</b> symbol (a v jedné klauzuli ≠ a v jiné, pokud nejsou ze stejného ∃)?</p>
+<p>☐ Proměnné v různých klauzulích jsou <b>přejmenované</b>?</p>
+<p>☐ Substituci jsem dosadil i do <b>zbytku</b> klauzule?</p>
+<p>☐ Předpoklad jen s ∀ (Každý A je B) <b>netvrdí</b>, že nějaký A existuje.</p>
+</div>
+
+<div class="box rule">
+<p><b>Co rezoluce zaručuje (teorie):</b></p>
+<p>Korektnost: odvodím # → množina klauzulí je opravdu nesplnitelná.</p>
+<p>Úplnost: množina je nesplnitelná → # se odvodit dá.</p>
+<p>Ale v PL1 rezoluce <b>nemusí skončit</b>, když # nevychází (PL1 je jen částečně rozhodnutelná).</p>
+</div>
+</main>
+</body>
+</html>

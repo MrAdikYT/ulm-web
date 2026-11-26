@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lekce 4 · Unifikace</title>
+<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body>
+<main>
+<nav class="crumbs"><a href="0003-implikace-klauzule.html">← Lekce 3: Implikace a klauzule</a> · <a href="../reference/skolem-9-kroku.html">Reference: 9 kroků</a></nav>
+
+<header class="lesson">
+<div class="kicker">ULM · test 3 · lekce 4 ze 5</div>
+<h1>Unifikace: jak udělat dva literály stejné</h1>
+<p class="lede">Asi 12 minut. Poslední nástroj před rezolucí.</p>
+</header>
+
+<p class="win"><b>Na konci lekce umíš:</b> najít substituci, po které jsou dva literály stejné, nebo poznat, že to nejde.</p>
+
+<h2>Proč to potřebujeme</h2>
+<p>Rezoluce škrtá dvojici <span class="f">P(…)</span> a <span class="f">¬P(…)</span>. Jenže v jedné klauzuli máš <span class="f">¬P(x)</span> a ve druhé <span class="f">P(a)</span>. To nejsou stejné literály. Klauzule ale platí <b>pro každé x</b>, takže smíš za x dosadit a: <span class="f">x/a</span>. Pak máš <span class="f">¬P(a)</span> a <span class="f">P(a)</span> a můžeš škrtnout.</p>
+
+<h2>Pravidla</h2>
+<div class="box rule">
+<p><b>Zápis.</b> <span class="f">x/a</span> znamená „místo <b>x</b> piš <b>a</b>“, a to <b>všude</b>, v obou literálech.</p>
+<p><b>Pravidlo 1.</b> Dosazovat smíš jen <b>za proměnnou</b> (x, y, z…). Konstantu (a, b) ani funkci měnit nesmíš.</p>
+<p><b>Pravidlo 2.</b> Za proměnnou smíš dát jakýkoli term: konstantu, jinou proměnnou nebo funkci: <span class="f">x/a</span>, <span class="f">x/z</span>, <span class="f">x/f(y)</span>.</p>
+<p><b>Pravidlo 3.</b> Nejde to, když narazíš na:</p>
+<ul>
+<li>dvě <b>různé konstanty</b>: <span class="f">a</span> proti <span class="f">b</span></li>
+<li>dva <b>různé funkční symboly</b>: <span class="f">f(…)</span> proti <span class="f">g(…)</span></li>
+<li>proměnnou proti funkci, která tu <b>samou proměnnou</b> obsahuje: <span class="f">x</span> proti <span class="f">f(x)</span>. Dosadit <span class="f">x/f(x)</span> nejde, x by se nikdy nezbavilo samo sebe.</li>
+</ul>
+</div>
+
+<h2>Postup: zleva doprava, jedna neshoda po druhé</h2>
+<p>Unifikuj <span class="f">P(x, f(y))</span> a <span class="f">P(a, f(b))</span>.</p>
+<ol>
+<li>Porovnávej argumenty zleva. 1. argument: <span class="f">x</span> proti <span class="f">a</span>. x je proměnná → <span class="f">x/a</span>.<br>Teď máš <span class="fb">P(a, f(y))</span> a <span class="fb">P(a, f(b))</span>.</li>
+<li>2. argument: <span class="f">f(y)</span> proti <span class="f">f(b)</span>. Stejná funkce f, jdi dovnitř: <span class="f">y</span> proti <span class="f">b</span> → <span class="f">y/b</span>.</li>
+<li>Obě strany jsou <span class="f">P(a, f(b))</span>. Hotovo. Substituce: <span class="f">x/a, y/b</span>.</li>
+</ol>
+
+<p>A když to nejde: <span class="f">P(x, x)</span> a <span class="f">P(a, b)</span>.</p>
+<ol>
+<li><span class="f">x/a</span>. Dosadíš <b>všude</b>, takže vlevo máš <span class="fb">P(a, a)</span>.</li>
+<li>2. argument: <span class="f">a</span> proti <span class="f">b</span>. Dvě různé konstanty → <b>nejde unifikovat</b>.</li>
+</ol>
+<div class="box trap">
+<p><b>Past:</b> zapomenout dosadit všude. Když dosadíš x/a jen do prvního argumentu, „vyjde“ ti i nesmysl jako x/a, x/b. Jedna proměnná ale nemůže být dvě věci najednou.</p>
+</div>
+
+<details class="recall"><summary>Zkus z hlavy (na papír)</summary>
+<p>Unifikuj <span class="f">Q(x, g(x))</span> a <span class="f">Q(f(z), g(f(a)))</span>.</p>
+<p>Řešení: <span class="f">x/f(z)</span> → vlevo <span class="f">Q(f(z), g(f(z)))</span>. Pak <span class="f">z</span> proti <span class="f">a</span> → <span class="f">z/a</span>. Výsledek: <span class="f">x/f(a), z/a</span>. Obě strany jsou <span class="f">Q(f(a), g(f(a)))</span>.</p>
+</details>
+
+<h2>Procvič</h2>
+<p><b>Taktika proti přehlédnutí:</b> přečti <b>všechny</b> možnosti, teprve pak klikni. Na testu je chyba za −1.</p>
+<div class="quiz" id="q4"></div>
+
+
+<footer class="lesson">
+<p><b>Primární zdroj:</b> Cvičení 8 s řešením, úloha na unifikaci (příklady a–e, včetně jednoho, který unifikovat nejde).</p>
+<p><b>Další:</b> <a href="0005-rezoluce-sporem.html">Lekce 5: Rezoluce sporem</a> ·<a href="../reference/skolem-9-kroku.html">Reference: 9 kroků</a></p>
+</footer>
+</main>
+
+<script src="../assets/quiz.js"></script>
+<script>
+Quiz.mount("q4",[
+ {q:"Unifikuj <span class='f'>P(x)</span> a <span class='f'>P(a)</span>:",
+  a:["<span class='f'>x/a</span>","<span class='f'>a/x</span>","nejde unifikovat"], ok:0,
+  why:"Dosazuje se za proměnnou x. Zápis a/x by znamenal měnit konstantu, to nejde."},
+ {q:"Unifikuj <span class='f'>P(a)</span> a <span class='f'>P(b)</span>:",
+  a:["<span class='f'>a/b</span>","<span class='f'>b/a</span>","nejde unifikovat"], ok:2,
+  why:"a a b jsou dvě různé konstanty. Konstanty se nemění."},
+ {q:"Unifikuj <span class='f'>P(x, f(y))</span> a <span class='f'>P(a, f(b))</span>:",
+  a:["<span class='f'>x/a, y/f(b)</span>","<span class='f'>x/a, y/b</span>","<span class='f'>x/f(b), y/a</span>"], ok:1,
+  why:"x proti a → x/a. f(y) proti f(b): stejná funkce, jdi dovnitř → y/b."},
+ {q:"Unifikuj <span class='f'>P(x, x)</span> a <span class='f'>P(a, b)</span>:",
+  a:["<span class='f'>x/a, x/b</span>","<span class='f'>x/a</span>","nejde unifikovat"], ok:2,
+  why:"Po x/a máš P(a, a) proti P(a, b). Zbude a proti b → nejde."},
+ {q:"Unifikuj <span class='f'>P(x)</span> a <span class='f'>P(f(x))</span>:",
+  a:["<span class='f'>x/f(x)</span>","nejde unifikovat","<span class='f'>x/f(a)</span>"], ok:1,
+  why:"x proti f(x): funkce obsahuje tu samou proměnnou. Takové dosazení je zakázané."},
+ {q:"Unifikuj <span class='f'>Q(f(x), y)</span> a <span class='f'>Q(g(a), b)</span>:",
+  a:["<span class='f'>x/a, y/b</span>","nejde unifikovat","<span class='f'>x/g(a), y/b</span>"], ok:1,
+  why:"f proti g: dva různé funkční symboly. Do argumentů už se ani nejde."},
+ {q:"Unifikuj <span class='f'>R(x, y)</span> a <span class='f'>R(f(z), z)</span>:",
+  a:["<span class='f'>x/f(z), y/z</span>","<span class='f'>x/z, y/f(z)</span>","nejde unifikovat"], ok:0,
+  why:"x proti f(z) → x/f(z). y proti z → y/z. Obě strany: R(f(z), z)."},
+ {q:"Která substituce je povolená?",
+  a:["<span class='f'>a/x</span>","<span class='f'>x/f(y)</span>","<span class='f'>f(x)/y</span>"], ok:1,
+  why:"Vlevo od lomítka musí být proměnná. a je konstanta, f(x) je funkce."},
+ {q:"Opakování: <span class='f'>¬(P(x) ⊃ Q(x))</span> je:",
+  a:["<span class='f'>¬P(x) ∧ Q(x)</span>","<span class='f'>P(x) ∨ ¬Q(x)</span>","<span class='f'>P(x) ∧ ¬Q(x)</span>"], ok:2,
+  why:"Předpoklad platí A ZÁROVEŇ závěr ne. Neguje se jen Q, spojka je ∧."},
+ {q:"Opakování: které kroky zachovávají <b>jen splnitelnost</b>?",
+  a:["kroky 1 a 7","kroky 7 a 9","kroky 1 a 9"], ok:0,
+  why:"Jen kroky, které pracují s ∃: 1 (uzávěr) a 7 (Skolemizace). Krok 9 je ekvivalence."}
+]);
+</script>
+</body>
+</html>

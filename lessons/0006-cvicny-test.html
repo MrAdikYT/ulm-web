@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cvičný test 3</title>
+<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body>
+<main>
+<nav class="crumbs"><a href="0005-rezoluce-sporem.html">← Lekce 5: Rezoluce sporem</a> · <a href="../reference/skolem-9-kroku.html">Reference: 9 kroků</a> · <a href="../ulm-tahak.html">Velký tahák</a></nav>
+
+<header class="lesson">
+<div class="kicker">ULM · test 3 · generálka</div>
+<h1>Cvičný test ve formátu a–d</h1>
+<p class="lede">Dvě varianty, každá má 3 otázky jako na testu. U každého tvrzení dej P (pravda), N (nepravda), nebo nic. Správně +1, špatně −1, nic 0.</p>
+</header>
+
+<div class="box trap">
+<p><b>Tři nejčastější chyby:</b></p>
+<p><b>1. # = vyhrál jsi.</b> Prázdná klauzule = spor = závěr <b>vyplývá</b>, úsudek je platný. Bez # = nevyplývá.</p>
+<p><b>2. Negace ∀ dá ∃, a ∃ dá konstantu.</b> <span class="f">¬∀x(P(x) ⊃ Q(x))</span> → <span class="f">∃x(P(x) ∧ ¬Q(x))</span> → <span class="f">P(a)</span>, <span class="f">¬Q(a)</span>. Žádné x, ale a.</p>
+<p><b>3. Substituce jde do celého řádku.</b> 1. <span class="f">P(x) ∨ R(x)</span>, 2. <span class="f">¬P(f(y)) ∨ S(y)</span>. x/f(y), škrtneš P → 3. <span class="f">R(f(y)) ∨ S(y)</span>. R dostane f(y), S(y) žádné x nemá, takže zůstane.</p>
+</div>
+
+<p><b>Taktika:</b> když si nejsi jistý, nech tvrzení prázdné. Hádání tě v průměru nic nestojí, ale ani nic nepřinese. Formule čti znak po znaku: x proti a, f proti g, ∧ proti ∨.</p>
+
+<h2>Varianta A</h2>
+<div id="tA"></div>
+
+<h2>Varianta B</h2>
+<div id="tB"></div>
+
+
+<footer class="lesson">
+<p><b>Primární zdroj:</b> Cvičení 8 s řešením a Cvičení 9. Na každé úloze z cv9 si zkus, jestli bys uměl napsat aspoň klauzule.</p>
+<p><b>Lekce:</b> <a href="0001-skolemizace.html">1 Skolemizace</a> · <a href="0002-devet-kroku.html">2 9 kroků</a> · <a href="0003-implikace-klauzule.html">3 Implikace a klauzule</a> · <a href="0004-unifikace.html">4 Unifikace</a> · <a href="0005-rezoluce-sporem.html">5 Rezoluce</a> · <a href="0007-vennovy-diagramy.html">7 Venn</a> · <a href="0008-formalizace.html">8 Formalizace</a> · <a href="0009-dalsi-testy.html"><b>Další testy C–G</b></a></p>
+</footer>
+</main>
+
+<script src="../assets/tftest.js"></script>
+<script>
+TfTest.mount("tA",[
+ {q:"Formule <span class='f'>∀x ∃y ∀z ∃w P(x, y, z, w)</span> a algoritmus 9 kroků:",
+  items:[
+   {t:"Skolemizace (krok 7) zachovává ekvivalenci formule.", ok:false, why:"Jen splnitelnost. Jen splnitelnost mají kroky 1 a 7."},
+   {t:"Po Skolemizaci: <span class='f'>∀x∀z P(x, f(x), z, g(x, z))</span>.", ok:true, why:"Před ∃y je jen ∀x → f(x). Před ∃w je ∀x i ∀z → g(x, z)."},
+   {t:"Krok 1 (existenční uzávěr) zachovává jen splnitelnost.", ok:true, why:"Krok 1 přidává ∃ pro volné proměnné. To je ten druhý „podezřelý“ krok."},
+   {t:"V kroku 4 se <span class='f'>A ⊃ B</span> přepíše na <span class='f'>¬A ∧ B</span>.", ok:false, why:"A ⊃ B = ¬A ∨ B. Spojka je ∨."}
+  ]},
+ {q:"Unifikace literálů <span class='f'>P(x, f(y), a)</span> a <span class='f'>P(g(z), f(b), z)</span>:",
+  items:[
+   {t:"Literály lze unifikovat.", ok:true, why:"x/g(z), pak y/b, pak z/a. Nikde nenarazíš na dvě různé konstanty ani funkce."},
+   {t:"Substituce obsahuje <span class='f'>a/z</span>.", ok:false, why:"Dosazuje se ZA proměnnou: z/a. Konstanta a se nahradit nedá."},
+   {t:"Po unifikaci jsou oba literály <span class='f'>P(g(a), f(b), a)</span>.", ok:true, why:"x/g(z) a pak z/a, takže x je ve výsledku g(a)."},
+   {t:"Substituce obsahuje <span class='f'>y/f(b)</span>.", ok:false, why:"f(y) proti f(b): stejné f, jde se dovnitř → y/b, ne y/f(b)."}
+  ]},
+ {q:"Úsudek: <i>Každý student se učí. Někdo se neučí.</i> ⟶ <i>Někdo není student.</i> &nbsp;(S = student, U = učí se)",
+  items:[
+   {t:"Úsudek je platný (rezolucí vyjde #).", ok:true, why:"1. ¬S(x) ∨ U(x), 2. ¬U(a), 3. S(y). 1 + 2, x/a: ¬S(a). S 3, y/a: #."},
+   {t:"Z předpokladu „Někdo se neučí“ vznikne klauzule <span class='f'>¬U(x)</span>.", ok:false, why:"∃x ¬U(x) → Skolemova konstanta: ¬U(a), ne x."},
+   {t:"Negovaný závěr dá klauzuli <span class='f'>S(y)</span>.", ok:true, why:"¬∃x ¬S(x) → ∀x S(x) → S(y) (proměnná přejmenovaná)."},
+   {t:"Negovat se musí i předpoklad „Každý student se učí“.", ok:false, why:"U úsudku se neguje jen závěr (řádek pod čarou)."}
+  ]}
+]);
+
+TfTest.mount("tB",[
+ {q:"Převod <span class='f'>¬∀x(P(x) ⊃ ∃y Q(x, y))</span> na klauzule:",
+  items:[
+   {t:"Výsledek je jedna klauzule <span class='f'>P(a) ∨ ¬Q(a, y)</span>.", ok:false, why:"Je tam ∧, ne ∨, takže vzniknou dvě klauzule: P(a) a ¬Q(a, y)."},
+   {t:"Po krocích 4 a 5: <span class='f'>∃x(P(x) ∧ ∀y ¬Q(x, y))</span>.", ok:true, why:"¬∀ → ∃¬, ¬(¬P ∨ ∃yQ) → P ∧ ¬∃yQ → P ∧ ∀y¬Q."},
+   {t:"Krok 9 (distributivita) zachovává jen splnitelnost.", ok:false, why:"Roznásobení je ekvivalence. Jen splnitelnost mají kroky 1 a 7."},
+   {t:"Výsledné klauzule jsou <span class='f'>P(a)</span> a <span class='f'>¬Q(a, y)</span>.", ok:true, why:"∃x je první → a. ∀y zůstane jako proměnná y."}
+  ]},
+ {q:"Unifikace:",
+  items:[
+   {t:"<span class='f'>P(x, x)</span> a <span class='f'>P(a, b)</span> lze unifikovat.", ok:false, why:"x/a dosadíš všude → P(a, a) proti P(a, b). a proti b nejde."},
+   {t:"<span class='f'>R(x, y)</span> a <span class='f'>R(f(z), z)</span>: substituce x/f(z), y/z.", ok:true, why:"x proti f(z) → x/f(z). y proti z → y/z. Obě strany R(f(z), z)."},
+   {t:"<span class='f'>Q(x)</span> a <span class='f'>Q(f(x))</span> lze unifikovat.", ok:false, why:"x proti f(x), kde f(x) obsahuje samo x. Zakázané."},
+   {t:"<span class='f'>P(f(x))</span> a <span class='f'>P(g(a))</span>: substituce x/a.", ok:false, why:"f proti g, různé funkční symboly. Nejde vůbec."}
+  ]},
+ {q:"Úsudek: <i>Všichni psi štěkají.</i> ⟶ <i>Nějaký pes štěká.</i> &nbsp;(Ps = pes, Š = štěká)",
+  items:[
+   {t:"Úsudek je platný.", ok:false, why:"Věta s ∀ netvrdí, že nějaký pes existuje. Stejná past jako cv8 4b (stoly)."},
+   {t:"Klauzule negovaného závěru je <span class='f'>¬Ps(y) ∨ ¬Š(y)</span>.", ok:true, why:"¬∃y(Ps(y) ∧ Š(y)) → ∀y(¬Ps(y) ∨ ¬Š(y))."},
+   {t:"Rezolucí lze odvodit #.", ok:false, why:"1. ¬Ps(x) ∨ Š(x), 2. ¬Ps(y) ∨ ¬Š(y). Rezolventa ¬Ps(x) a dál nic, kladné Ps chybí."},
+   {t:"Rezolventa klauzulí 1 a 2 (y/x) je <span class='f'>¬Ps(x)</span>.", ok:true, why:"Škrtneš Š(x) a ¬Š(x), zbyde ¬Ps(x) ∨ ¬Ps(x) = ¬Ps(x)."}
+  ]}
+]);
+</script>
+</body>
+</html>

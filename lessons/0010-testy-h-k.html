@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cvičné testy H–K</title>
+<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body>
+<main>
+<nav class="crumbs"><a href="../index.html">← Rozcestník</a> · <a href="0009-dalsi-testy.html">Testy C–G</a> · <a href="../reference/rezoluce-postup.html">Tahák: rezoluce</a> · <a href="../reference/teorie-pojmy.html">Tahák: teorie</a></nav>
+
+<header class="lesson">
+<div class="kicker">ULM · test 3 · generálka 3</div>
+<h1>Cvičné testy: varianty H–K</h1>
+<p class="lede">Čtyři nové varianty po 3 otázkách. P, N, nebo nic. Správně +1, špatně −1, nic 0. Formule si piš na papír, hlavně negace a ∀→x / ∃→a.</p>
+</header>
+
+<table>
+<tr><th>varianta</th><th>téma</th></tr>
+<tr><td><a href="#vH">H</a></td><td>celé úlohy rezolucí (i se vztahy R(x, y))</td></tr>
+<tr><td><a href="#vI">I</a></td><td>9 kroků a unifikace</td></tr>
+<tr><td><a href="#vJ">J</a></td><td>Vennovy diagramy</td></tr>
+<tr><td><a href="#vK">K</a></td><td>teorie: vyplývání, splnitelnost, rezoluce</td></tr>
+</table>
+
+<h2 id="vH">Varianta H: rezoluce</h2>
+<div id="tH"></div>
+<h2 id="vI">Varianta I: 9 kroků a unifikace</h2>
+<div id="tI"></div>
+<h2 id="vJ">Varianta J: Venn</h2>
+<div id="tJ"></div>
+<h2 id="vK">Varianta K: teorie</h2>
+<div id="tK"></div>
+
+
+<footer class="lesson">
+<p><b>Taháky:</b> <a href="../reference/rezoluce-postup.html">rezoluce a unifikace</a> · <a href="../reference/venn-postup.html">Venn</a> · <a href="../reference/teorie-pojmy.html">teorie</a> · <a href="../reference/pravidla-prepisu.html">pravidla přepisu</a> · <a href="0011-priklady-s-resenim.html"><b>Příklady s řešením</b></a></p>
+</footer>
+</main>
+
+<script src="../assets/tftest.js"></script>
+<script>
+const f=s=>`<span class='f'>${s}</span>`;
+TfTest.mount("tH",[
+ {q:"Úsudek: <i>Kdo je chytrý (Ch), ten studuje (S). Kdo studuje, ten projde (P). Karel (k) je chytrý.</i> ⟶ <i>Karel projde.</i>",
+  items:[
+   {t:"Klauzule negovaného závěru je "+f("¬P(k)")+".", ok:true, why:"Závěr P(k) je bez kvantifikátoru, negace je prostě ¬P(k)."},
+   {t:"Rezolventa klauzulí "+f("¬Ch(x) ∨ S(x)")+" a "+f("Ch(k)")+" je "+f("S(k)")+".", ok:true, why:"x/k, škrtneš Ch, zbyde S(k)."},
+   {t:"Úsudek je neplatný, protože P(k) není v žádném předpokladu.", ok:false, why:"1+3 → S(k), s ¬S(y) ∨ P(y) (y/k) → P(k), s ¬P(k) → #. Platný."},
+   {t:"K # stačí 3 kroky rezoluce.", ok:true, why:"S(k), P(k), #. Přesně 3."}
+  ]},
+ {q:"Úsudek: "+f("∃x∀y R(x, y)")+" ⟶ "+f("∀y∃x R(x, y)")+" &nbsp;(Někdo má rád každého ⟶ Každý je někým milován.)",
+  items:[
+   {t:"Předpoklad dá klauzuli "+f("R(a, y)")+".", ok:true, why:"∃x je první, před ním nic → konstanta a. ∀y zůstane proměnná."},
+   {t:"Negovaný závěr dá klauzuli "+f("¬R(f(y), y)")+".", ok:false, why:"¬∀y∃x R → ∃y∀x ¬R. Teď je ∃y PRVNÍ → konstanta b: ¬R(x, b)."},
+   {t:"Negovaný závěr dá klauzuli "+f("¬R(x, b)")+".", ok:true, why:"∃y∀x ¬R(x, y), y → b, x zůstane proměnná."},
+   {t:"Úsudek je neplatný.", ok:false, why:"R(a, y) a ¬R(x, b): x/a, y/b → #. Platný."}
+  ]},
+ {q:"Obrácený úsudek: "+f("∀y∃x R(x, y)")+" ⟶ "+f("∃x∀y R(x, y)"),
+  items:[
+   {t:"Předpoklad dá klauzuli "+f("R(f(y), y)")+".", ok:true, why:"Před ∃x stojí ∀y → x se nahradí f(y)."},
+   {t:"Negovaný závěr dá klauzuli "+f("¬R(x, g(x))")+".", ok:true, why:"¬∃x∀y R → ∀x∃y ¬R. Před ∃y stojí ∀x → y je g(x). Nový symbol g, ne f."},
+   {t:"Literály "+f("R(f(y), y)")+" a "+f("R(x, g(x))")+" lze unifikovat.", ok:false, why:"x/f(y), pak y proti g(f(y)). y je uvnitř g(f(y)) → nejde."},
+   {t:"Úsudek je platný.", ok:false, why:"Nic se neunifikuje, # nevyjde. Každý je někým milován ≠ existuje jeden, kdo má rád všechny."}
+  ]}
+]);
+
+TfTest.mount("tI",[
+ {q:"Formule "+f("∀x(P(x) ⊃ ∃y(Q(y) ∧ R(x, y)))")+" na klauzule:",
+  items:[
+   {t:"Po kroku 4: "+f("∀x(¬P(x) ∨ ∃y(Q(y) ∧ R(x, y)))")+".", ok:true, why:"A ⊃ B = ¬A ∨ B, zbytek se nemění."},
+   {t:"y se nahradí konstantou a.", ok:false, why:"Před ∃y stojí ∀x → y se nahradí f(x)."},
+   {t:"Vzniknou dvě klauzule.", ok:true, why:"¬P(x) ∨ (Q ∧ R) → roznásobit → (¬P ∨ Q) ∧ (¬P ∨ R)."},
+   {t:"Jedna z klauzulí je "+f("¬P(x) ∨ R(x, f(x))")+".", ok:true, why:"Druhá část roznásobení, y = f(x)."}
+  ]},
+ {q:"Formule "+f("∃x∀y(P(x, y) ∨ ¬∀z Q(z, y))")+" na klauzule:",
+  items:[
+   {t:"Po kroku 5 je uvnitř "+f("∃z ¬Q(z, y)")+".", ok:true, why:"¬∀z → ∃z ¬."},
+   {t:"z se nahradí konstantou b.", ok:false, why:"Po vytknutí: ∃x∀y∃z. Před ∃z stojí ∀y → z je f(y)."},
+   {t:"Výsledná klauzule je "+f("P(a, y) ∨ ¬Q(f(y), y)")+".", ok:true, why:"x → a (nic před ním), z → f(y)."},
+   {t:"Výsledek jsou dvě klauzule.", ok:false, why:"Uvnitř je jen ∨, žádné ∧ → jedna klauzule."}
+  ]},
+ {q:"Unifikace:",
+  items:[
+   {t:f("P(x, g(x))")+" a "+f("P(f(y), z)")+": substituce x/f(y), z/g(f(y)).", ok:true, why:"x/f(y). Pak g(x) je g(f(y)) proti z → z/g(f(y))."},
+   {t:f("P(a, x)")+" a "+f("P(y, f(y))")+": výsledek je "+f("P(a, f(a))")+".", ok:true, why:"a proti y → y/a. x proti f(y) = f(a) → x/f(a)."},
+   {t:f("Q(x, f(x))")+" a "+f("Q(f(y), y)")+" lze unifikovat.", ok:false, why:"x/f(y). Pak f(f(y)) proti y. y uvnitř → nejde."},
+   {t:f("R(a, b)")+" a "+f("R(x, x)")+" lze unifikovat.", ok:false, why:"x/a, pak b proti a. Dvě různé konstanty → nejde."}
+  ]}
+]);
+
+TfTest.mount("tJ",[
+ {q:"<i>Všichni lékaři (L) jsou vzdělaní (V). Někteří lékaři jsou sportovci (S).</i> ⟶ <i>Někteří sportovci jsou vzdělaní.</i>",
+  items:[
+   {t:"Šedě se vyplní celá část L, která leží mimo V.", ok:true, why:"„Každý L je V“ → L mimo V je prázdné."},
+   {t:"× z 2. předpokladu leží na čáře kruhu V.", ok:false, why:"L∩S mimo V je šedé → × jde jednoznačně do L∩S∩V."},
+   {t:"Úsudek je platný.", ok:true, why:"× je v L∩S∩V, tedy i v S∩V."},
+   {t:"Kdyby 2. předpoklad zněl „Někteří sportovci nejsou lékaři“, úsudek by byl platný.", ok:false, why:"× do S mimo L. Ta část je rozdělená kruhem V, obě půlky volné → × na čáru → neplatný."}
+  ]},
+ {q:"<i>Žádný politik (P) není poctivý (Po). Někteří poctiví jsou bohatí (B).</i> ⟶ <i>Někteří bohatí nejsou politici.</i>",
+  items:[
+   {t:"Průnik P a Po je celý šedý.", ok:true, why:"„Žádný P není Po“."},
+   {t:"× leží v průniku Po a B mimo P.", ok:true, why:"Část Po∩B uvnitř P je šedá, takže × jde do volné."},
+   {t:"Úsudek je platný.", ok:true, why:"× je v B a mimo P."},
+   {t:"Ze stejných předpokladů plyne i „Někteří politici jsou bohatí“.", ok:false, why:"V P∩B žádný × není. Nevyplývá."}
+  ]},
+ {q:"<i>Všechny kočky (K) jsou savci (S). Někteří savci jsou černí (Č).</i> ⟶ <i>Některé kočky jsou černé.</i>",
+  items:[
+   {t:"× z 2. předpokladu musí ležet uvnitř K.", ok:false, why:"S∩Č: část v K i část mimo K jsou volné → nevíme."},
+   {t:"× leží na čáře kruhu K.", ok:true, why:"Obě části S∩Č volné → na čáru K."},
+   {t:"Úsudek je neplatný.", ok:true, why:"× na čáře nestačí pro „Některé K jsou Č“."},
+   {t:"Kdyby 1. předpoklad zněl „Všichni savci jsou kočky“, úsudek by byl platný.", ok:true, why:"Pak S mimo K je šedé → × v S∩Č musí být v K → K∩Č neprázdné."}
+  ]}
+]);
+
+TfTest.mount("tK",[
+ {q:f("A₁, …, Aₙ ⊨ Z")+" :",
+  items:[
+   {t:"platí, právě když je množina "+f("{A₁, …, Aₙ, ¬Z}")+" nesplnitelná.", ok:true, why:"Na tom stojí rezoluce sporem."},
+   {t:"platí, právě když je "+f("(A₁ ∧ … ∧ Aₙ) ⊃ Z")+" logicky platná.", ok:true, why:"Věta o dedukci."},
+   {t:"znamená, že Z je pravdivá v každé interpretaci.", ok:false, why:"Jen v těch, kde jsou pravdivé předpoklady. Každá interpretace = ⊨ Z."},
+   {t:"platí vždy, když jsou předpoklady nesplnitelné.", ok:true, why:"Žádná interpretace nesplní předpoklady → podmínka splněna triviálně."}
+  ]},
+ {q:"Formule A je:",
+  items:[
+   {t:"logicky platná, právě když ¬A je nesplnitelná.", ok:true, why:"A pravdivá všude ⇔ ¬A nepravdivá všude."},
+   {t:"splnitelná, právě když ¬A je nesplnitelná.", ok:false, why:"To je definice platnosti. P(x) i ¬P(x) mohou být obě splnitelné."},
+   {t:"kontradikce, právě když nemá žádný model.", ok:true, why:"Kontradikce = nesplnitelná = bez modelu."},
+   {t:"splnitelná, pokud je logicky platná.", ok:true, why:"Pravdivá všude ⇒ určitě aspoň někde."}
+  ]},
+ {q:"Rezoluční metoda v PL1:",
+  items:[
+   {t:"Když odvodím #, je množina klauzulí nesplnitelná.", ok:true, why:"Korektnost."},
+   {t:"Když je množina klauzulí nesplnitelná, # se odvodit dá.", ok:true, why:"Úplnost (pro vyvracení)."},
+   {t:"Vždy po konečném počtu kroků rozhodne, zda úsudek platí.", ok:false, why:"PL1 je jen částečně rozhodnutelná. Když # nevychází, může běžet do nekonečna."},
+   {t:"Pracuje s formulemi ve Skolemově klauzulární formě.", ok:true, why:"Nejdřív 9 kroků, pak rezoluce."}
+  ]}
+]);
+</script>
+</body>
+</html>

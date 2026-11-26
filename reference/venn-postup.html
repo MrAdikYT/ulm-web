@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Venn postup</title>
+<link rel="stylesheet" href="../assets/course.css">
+<style>
+td .f{font-size:1.06em}
+.vg{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;margin:12px 0}
+.vcap{font-size:.92rem;color:var(--muted);margin-top:4px}
+</style>
+</head>
+<body>
+<main>
+<nav class="crumbs"><a href="../index.html">← Rozcestník</a> · <a href="../lessons/0007-vennovy-diagramy.html">Lekce 7: Venn</a> · <a href="vety-klauzule.html">Věty → klauzule</a></nav>
+<header class="lesson">
+<div class="kicker">ULM · reference</div>
+<h1>Vennovy diagramy: postup</h1>
+<p class="lede">Tři kruhy, šedá = prázdné, × = tam něco je. Ověření úsudku na 5 kroků.</p>
+</header>
+
+<h2>A. Co nakreslit za jakou větu</h2>
+<table>
+<tr><th>věta</th><th>formule</th><th>do diagramu</th></tr>
+<tr><td>Každý A je B</td><td><span class="f">∀x(A ⊃ B)</span></td><td><b>šedě</b> A mimo B</td></tr>
+<tr><td>Žádný A není B</td><td><span class="f">∀x(A ⊃ ¬B)</span></td><td><b>šedě</b> průnik A a B</td></tr>
+<tr><td>Některý A je B</td><td><span class="f">∃x(A ∧ B)</span></td><td><b>×</b> do průniku A a B</td></tr>
+<tr><td>Některý A není B</td><td><span class="f">∃x(A ∧ ¬B)</span></td><td><b>×</b> do A mimo B</td></tr>
+<tr><td>Pouze A jsou B</td><td><span class="f">∀x(B ⊃ A)</span></td><td><b>šedě</b> B mimo A</td></tr>
+</table>
+
+<h2>B. Postup</h2>
+<ol>
+<li>Nakresli 3 kruhy a pojmenuj je.</li>
+<li><b>Nejdřív všechny ∀ předpoklady</b> (šedá).</li>
+<li><b>Pak ∃ předpoklady</b> (×). Když oblast pro × rozdělí třetí kruh na dvě části:
+ <ul><li>jedna část šedá → × jde do té volné,</li>
+ <li>obě volné → × na <b>čáru</b> (nevíš, na které straně je).</li></ul></li>
+<li><b>Závěr nekresli</b>, jen se podívej:
+ <ul><li>závěr ∀ (šedá) → je jeho oblast <b>celá šedá</b>?</li>
+ <li>závěr ∃ (×) → je v jeho oblasti × <b>určitě</b> (ne na čáře, která z ní vede ven)?</li></ul></li>
+<li>Ano → <b>platný</b>. Ne → <b>neplatný</b>.</li>
+</ol>
+
+<h2>C. Platný a neplatný vedle sebe</h2>
+<p><b>Platný:</b> <i>Žádný had (H) nemá nohy (N). Někteří plazi (Pl) jsou hadi.</i> ⟶ <i>Někteří plazi nemají nohy.</i></p>
+<div class="vg"><div id="v1"></div><div id="v2"></div></div>
+<p><b>Neplatný:</b> <i>Všechny kočky (K) jsou savci (S). Někteří savci jsou černí (Č).</i> ⟶ <i>Některé kočky jsou černé.</i></p>
+<div class="vg"><div id="v3"></div><div id="v4"></div></div>
+
+<div class="box trap">
+<p><b>Pasti:</b></p>
+<p>× na čáře <b>nestačí</b> pro existenční závěr.</p>
+<p>Jen ∀ předpoklady (žádný ×) → existenční závěr („Někteří…“) <b>nikdy</b> nevyplývá.</p>
+<p>Sporné předpoklady (× v šedé oblasti, nemá kam jít) → úsudek je <b>platný</b> (z nepravdy plyne cokoli).</p>
+</div>
+</main>
+<script src="../assets/venn.js"></script>
+<script>
+const L1=["H","N","Pl"];
+Venn.draw("v1",{labels:L1,shade:["AB","ABC"],x:["AC"],caption:"Šedě H∩N. × do H∩Pl, jeho část v N je šedá → × do volné části."});
+Venn.draw("v2",{labels:L1,shade:["AB","ABC"],x:["AC"],hi:["C","AC"],caption:"Závěr: Pl mimo N (modré tečky). × tam je → <b>platný</b>."});
+const L2=["K","S","Č"];
+Venn.draw("v3",{labels:L2,shade:["A","AC"],line:[["BC","ABC"]],caption:"Šedě K mimo S. × do S∩Č: obě části (v K i mimo K) volné → na čáru."});
+Venn.draw("v4",{labels:L2,shade:["A","AC"],line:[["BC","ABC"]],hi:["AC","ABC"],caption:"Závěr: K∩Č. × je na čáře, nevíme, jestli uvnitř → <b>neplatný</b>."});
+</script>
+</body>
+</html>

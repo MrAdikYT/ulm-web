@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pravidla přepisu</title>
+<link rel="stylesheet" href="../assets/course.css">
+<style>
+td .f,th .f{font-size:1.12em}
+td{vertical-align:middle}
+td.eq{text-align:center;color:var(--muted);width:2em}
+h2{margin-top:28px}
+</style>
+</head>
+<body>
+<main>
+<nav class="crumbs"><a href="../index.html">← Rozcestník</a> · <a href="skolem-9-kroku.html">9 kroků</a> · <a href="vety-klauzule.html">Věty → klauzule</a></nav>
+<header class="lesson">
+<div class="kicker">ULM · reference</div>
+<h1>Pravidla přepisu formulí</h1>
+<p class="lede">Všechny ekvivalence, které potřebuješ ve 4. a 5. kroku, v rezoluci a u negace závěru. Levá strana = co vidíš, pravá = na co to přepíšeš.</p>
+</header>
+
+<h2>1. Implikace a ekvivalence (krok 4)</h2>
+<table>
+<tr><td><span class="f">A ⊃ B</span></td><td class="eq">=</td><td><span class="f">¬A ∨ B</span></td><td>neguj levou stranu, spojka <b>∨</b></td></tr>
+<tr><td><span class="f">A ≡ B</span></td><td class="eq">=</td><td><span class="f">(¬A ∨ B) ∧ (A ∨ ¬B)</span></td><td>dvě implikace tam a zpět</td></tr>
+</table>
+
+<h2>2. Negace spojek (De Morgan, krok 5)</h2>
+<table>
+<tr><td><span class="f">¬(A ∧ B)</span></td><td class="eq">=</td><td><span class="f">¬A ∨ ¬B</span></td><td>∧ se otočí na ∨</td></tr>
+<tr><td><span class="f">¬(A ∨ B)</span></td><td class="eq">=</td><td><span class="f">¬A ∧ ¬B</span></td><td>∨ se otočí na ∧</td></tr>
+<tr><td><span class="f">¬(A ⊃ B)</span></td><td class="eq">=</td><td><span class="f">A ∧ ¬B</span></td><td>A <b>zůstane</b>, neguje se jen B</td></tr>
+<tr><td><span class="f">¬¬A</span></td><td class="eq">=</td><td><span class="f">A</span></td><td>dvojitá negace zmizí</td></tr>
+<tr><td><span class="f">¬(A ≡ B)</span></td><td class="eq">=</td><td><span class="f">(A ∧ ¬B) ∨ (¬A ∧ B)</span></td><td>přesně jedna strana platí</td></tr>
+</table>
+<p class="side">Proč <span class="f">¬(A ⊃ B) = A ∧ ¬B</span>: <span class="f">¬(¬A ∨ B)</span> → De Morgan → <span class="f">¬¬A ∧ ¬B</span> → <span class="f">A ∧ ¬B</span>.</p>
+
+<h2>3. Negace kvantifikátorů (krok 5)</h2>
+<table>
+<tr><td><span class="f">¬∀x A</span></td><td class="eq">=</td><td><span class="f">∃x ¬A</span></td><td>→ při Skolemizaci <b>konstanta a</b></td></tr>
+<tr><td><span class="f">¬∃x A</span></td><td class="eq">=</td><td><span class="f">∀x ¬A</span></td><td>→ zůstane <b>proměnná x</b></td></tr>
+<tr><td><span class="f">¬∀x(A ⊃ B)</span></td><td class="eq">=</td><td><span class="f">∃x(A ∧ ¬B)</span></td><td>„ne každý A je B“ = „některý A není B“</td></tr>
+<tr><td><span class="f">¬∃x(A ∧ B)</span></td><td class="eq">=</td><td><span class="f">∀x(¬A ∨ ¬B)</span></td><td>= <span class="f">∀x(A ⊃ ¬B)</span>, „žádný A není B“</td></tr>
+</table>
+
+<h2>4. α a β (sémantický spor / tabla)</h2>
+<p><b>α = konjunkce</b>: obě části platí, píšeš je <b>pod sebe</b> do jedné větve. <b>β = disjunkce</b>: větev se <b>rozdělí</b> na dvě.</p>
+<table>
+<tr><th>α (pod sebe)</th><th>α₁, α₂</th><th>β (větvení)</th><th>β₁ | β₂</th></tr>
+<tr><td><span class="f">A ∧ B</span></td><td><span class="f">A</span>, <span class="f">B</span></td><td><span class="f">A ∨ B</span></td><td><span class="f">A</span> | <span class="f">B</span></td></tr>
+<tr><td><span class="f">¬(A ∨ B)</span></td><td><span class="f">¬A</span>, <span class="f">¬B</span></td><td><span class="f">¬(A ∧ B)</span></td><td><span class="f">¬A</span> | <span class="f">¬B</span></td></tr>
+<tr><td><span class="f">¬(A ⊃ B)</span></td><td><span class="f">A</span>, <span class="f">¬B</span></td><td><span class="f">A ⊃ B</span></td><td><span class="f">¬A</span> | <span class="f">B</span></td></tr>
+<tr><td><span class="f">¬¬A</span></td><td><span class="f">A</span></td><td></td><td></td></tr>
+</table>
+<p class="side">Zkratka: <b>negace α je β a negace β je α.</b> <span class="f">A ⊃ B</span> je β, takže <span class="f">¬(A ⊃ B)</span> je α.</p>
+
+<h2>5. Vytýkání kvantifikátorů (krok 6)</h2>
+<table>
+<tr><td><span class="f">∀x A ∧ ∀x B</span></td><td class="eq">=</td><td><span class="f">∀x(A ∧ B)</span></td><td>∀ jde vytknout z ∧</td></tr>
+<tr><td><span class="f">∃x A ∨ ∃x B</span></td><td class="eq">=</td><td><span class="f">∃x(A ∨ B)</span></td><td>∃ jde vytknout z ∨</td></tr>
+<tr><td><span class="f">∀x A ∨ B</span></td><td class="eq">=</td><td><span class="f">∀x(A ∨ B)</span></td><td>jen když B <b>nemá</b> x</td></tr>
+<tr><td><span class="f">∀x A ∨ ∀x B</span></td><td class="eq">≠</td><td><span class="f">∀x(A ∨ B)</span></td><td>past: přejmenuj → <span class="f">∀x∀y(A(x) ∨ B(y))</span></td></tr>
+</table>
+
+<h2>6. Roznásobení (distributivita, krok 9)</h2>
+<table>
+<tr><td><span class="f">A ∨ (B ∧ C)</span></td><td class="eq">=</td><td><span class="f">(A ∨ B) ∧ (A ∨ C)</span></td><td>pro klauzule, tohle potřebuješ</td></tr>
+<tr><td><span class="f">(A ∧ B) ∨ (C ∧ D)</span></td><td class="eq">=</td><td><span class="f">(A∨C) ∧ (A∨D) ∧ (B∨C) ∧ (B∨D)</span></td><td>každý s každým</td></tr>
+<tr><td><span class="f">A ∧ (B ∨ C)</span></td><td class="eq">=</td><td><span class="f">(A ∧ B) ∨ (A ∧ C)</span></td><td>opačný směr, pro klauzule <b>nedělej</b></td></tr>
+</table>
+<p class="side">Každá část mezi ∧ = jedna klauzule. <span class="f">(A ∨ B) ∧ (A ∨ C)</span> → klauzule <span class="f">A ∨ B</span> a <span class="f">A ∨ C</span>.</p>
+
+<div class="box rule">
+<p><b>Postup na papír, když neguješ:</b></p>
+<p>1. Negace jde dovnitř <b>po jednom kroku</b>, nepřeskakuj.</p>
+<p>2. U každého kvantifikátoru otoč ∀↔∃, u každé spojky ∧↔∨, u ⊃ nech levou stranu a neguj pravou.</p>
+<p>3. Hned si napiš vedle ∀ → x, ∃ → a.</p>
+</div>
+</main>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lekce 1 · Skolemizace</title>
+<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body>
+<main>
+<nav class="crumbs"><a href="../reference/skolem-9-kroku.html">Reference: 9 kroků</a> · <a href="../ulm-tahak.html">Velký tahák</a></nav>
+
+<header class="lesson">
+<div class="kicker">ULM · test 3 · lekce 1 ze 4</div>
+<h1>Skolemizace: jak se zbavit ∃</h1>
+<p class="lede">Asi 10 minut. Rezoluce neumí pracovat s ∃, tak mu dáme jméno.</p>
+</header>
+
+<p class="win"><b>Na konci lekce umíš:</b> z jakékoli formule tvaru ∀…∃…∀… P(…) udělat formuli bez ∃. Přesně to je krok 7 z těch 9 kroků a skoro jistě to bude na testu.</p>
+
+<h2>Myšlenka</h2>
+<p>∃y znamená „nějaké y existuje“. Nevíme které, ale víme, že je. Tak mu prostě <b>dáme jméno</b> a dál s ním počítáme.</p>
+
+<div class="box rule">
+<p><b>Pravidlo 1.</b> Před ∃ <b>není žádné ∀</b> → nová <b>konstanta</b> (a, b, c…)</p>
+<p class="fb">∃x P(x) &nbsp;⟶&nbsp; P(a)</p>
+<p><b>Pravidlo 2.</b> Před ∃ <b>je nějaké ∀</b> → nová <b>funkce</b> všech ∀-proměnných, které stojí <b>před ním</b></p>
+<p class="fb">∀x ∃y P(x, y) &nbsp;⟶&nbsp; ∀x P(x, f(x))</p>
+<p><b>Pravidlo 3.</b> Každé ∃ dostane <b>nový</b> symbol. Dvě ∃ nikdy nesdílí stejnou konstantu ani funkci.</p>
+</div>
+
+<h3>Proč funkce?</h3>
+<p>„Každý má někoho rád“ = <span class="f">∀x ∃y R(x, y)</span>. Karel má rád Janu, Petr má rád Evu. Ten „někdo“ se mění podle x. Proto ho zapíšeme jako <span class="f">f(x)</span>: „ten, koho má rád x“. Konstanta by znamenala, že všichni mají rádi <b>stejného</b> člověka, a to formule neříká.</p>
+<p class="side">Pamatuj: <span class="f">f(x)</span> je <b>term</b>, tedy jeden prvek universa. Proto smí stát uvnitř predikátu, stejně jako jsme to řešili u <span class="f">P(f(x, y))</span> v cv6.</p>
+
+<h2>Postup na jednom příkladu</h2>
+<p><span class="f">∃x ∀y ∃z P(x, y, z)</span></p>
+<ol>
+<li>Jdi <b>zleva</b>. První je <span class="f">∃x</span>. Vlevo od něj nic není → <span class="f">x := a</span>.</li>
+<li><span class="f">∀y</span> necháš být.</li>
+<li><span class="f">∃z</span>: vlevo od něj je <span class="f">∀y</span> (∃x už je pryč, to se nepočítá) → <span class="f">z := f(y)</span>.</li>
+<li>Výsledek: <span class="f">∀y P(a, y, f(y))</span></li>
+</ol>
+
+<details class="recall"><summary>Než budeš pokračovat: zkus z hlavy (na papír)</summary>
+<p>Skolemizuj <span class="f">∀x ∃y ∃z P(x, y, z)</span>.</p>
+<p>Řešení: <span class="f">∀x P(x, f(x), g(x))</span>. Dvě ∃ za ∀x → dvě <b>různé</b> funkce, obě s argumentem x.</p>
+</details>
+
+<div class="box trap">
+<p><b>Past (cv8 g):</b> učitel před Skolemizací dělá krok 6, „kvantifikátory doprava“. Kvantifikátor tím zúží jen na tu část formule, kde jeho proměnná opravdu je.</p>
+<p class="fb">∀x∃y∀z∃v[P(z,y) ∧ Q(x,v)] &nbsp;⟶&nbsp; ∃y∀z P(z,y) ∧ ∀x∃v Q(x,v)</p>
+<p>Teď před <span class="f">∃y</span> žádné ∀ není, takže y je <b>konstanta a</b>, ne f(x). Výsledek: <span class="f">∀z∀x[P(z,a) ∧ Q(x,f(x))]</span>.</p>
+</div>
+
+<h2>Procvič</h2>
+<p>Odpovídej <b>bez</b> koukání nahoru. Chyba teď je v pohodě, právě z ní se to naučíš.</p>
+<div class="quiz" id="q1"></div>
+
+
+<footer class="lesson">
+<p><b>Primární zdroj:</b> Cvičení 8 s řešením (strana 1–2: příklady a–j, přesně v podobě, jak to chce vyučující).</p>
+<p><b>Další:</b> <a href="0002-devet-kroku.html">Lekce 2: 9 kroků</a> · <a href="../reference/skolem-9-kroku.html">Reference: celý algoritmus 9 kroků</a></p>
+</footer>
+</main>
+
+<script src="../assets/quiz.js"></script>
+<script>
+Quiz.mount("q1",[
+ {q:"<span class='f'>∃x ∀y P(x, y)</span> po Skolemizaci:",
+  a:["<span class='f'>∀y P(a, y)</span>","<span class='f'>∀y P(y, a)</span>","<span class='f'>∀y P(a, a)</span>"], ok:0,
+  why:"∃x je první, vlevo nic → konstanta a na místě x. y zůstává."},
+ {q:"<span class='f'>∀x ∃y P(x, y)</span> po Skolemizaci:",
+  a:["<span class='f'>∀x P(f(x), x)</span>","<span class='f'>∀x P(x, f(x))</span>","<span class='f'>∀x P(x, g(a))</span>"], ok:1,
+  why:"Před ∃y je ∀x → y := f(x). Pořadí argumentů v P se nemění."},
+ {q:"<span class='f'>∃x ∀y ∃z P(x, y, z)</span> po Skolemizaci:",
+  a:["<span class='f'>∀y P(a, y, f(a))</span>","<span class='f'>∀y P(f(y), y, a)</span>","<span class='f'>∀y P(a, y, f(y))</span>"], ok:2,
+  why:"x := a (nic před ním), z := f(y) (před ním je ∀y). Konstanta a se jako argument nepíše, argumenty jsou jen ∀-proměnné."},
+ {q:"<span class='f'>∀x ∀y ∃z P(x, y, z)</span> po Skolemizaci:",
+  a:["<span class='f'>∀x∀y P(x,y,f(x,x))</span>","<span class='f'>∀x∀y P(x,y,f(x,y))</span>","<span class='f'>∀x∀y P(x,y,f(y,y))</span>"], ok:1,
+  why:"Před ∃z stojí ∀x i ∀y → funkce obou: f(x, y)."},
+ {q:"Co Skolemizace zachovává?",
+  a:["jen splnitelnost formule","plnou logickou ekvivalenci","pravdivost každého modelu"], ok:0,
+  why:"Nová formule není ekvivalentní původní, ale je splnitelná právě tehdy, když je splnitelná původní. Pro rezoluci (hledání sporu) to stačí. Typická testová otázka!"},
+ {q:"<span class='f'>∀x ∃y ∃z P(x, y, z)</span> po Skolemizaci:",
+  a:["<span class='f'>∀x P(x,f(x),f(x))</span>","<span class='f'>∀x P(x,f(a),g(a))</span>","<span class='f'>∀x P(x,f(x),g(x))</span>"], ok:2,
+  why:"Každé ∃ dostane nový symbol (f a g), oba závisí na x."},
+ {q:"V <span class='f'>∀x∃y∀z∃v[P(z,y) ∧ Q(x,v)]</span> se po kroku 6 za y dosadí:",
+  a:["funkce f(x)","funkce f(z)","konstanta a"], ok:2,
+  why:"Krok 6 oddělí ∃y∀z P(z,y) od ∀x. Před ∃y pak žádné ∀ není → konstanta. Přesně takhle to má učitel v řešení cv8 g)."}
+]);
+</script>
+</body>
+</html>

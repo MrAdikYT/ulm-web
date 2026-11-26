@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Příklady s řešením</title>
+<link rel="stylesheet" href="../assets/course.css">
+<style>
+pre.res{font-family:var(--mono);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px 14px;line-height:1.7;overflow-x:auto;margin:8px 0}
+.zad{font-size:1.12rem;margin:6px 0 4px}
+.vg{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;margin:12px 0}
+.vcap{font-size:.92rem;color:var(--muted);margin-top:4px}
+</style>
+</head>
+<body>
+<main>
+<nav class="crumbs"><a href="../index.html">← Rozcestník</a> · <a href="0010-testy-h-k.html">Testy H–K</a> · <a href="../reference/rezoluce-postup.html">Tahák: rezoluce</a></nav>
+<header class="lesson">
+<div class="kicker">ULM · test 3 · počítání</div>
+<h1>Příklady s řešením na odkrytí</h1>
+<p class="lede">12 úloh jako z cvičení. Nejdřív to spočítej <b>na papír</b>, pak klikni na „Řešení“ a porovnej řádek po řádku.</p>
+</header>
+
+<h2>Skolemova klauzulární forma</h2>
+
+<p class="zad"><b>1.</b> <span class="f">∀x(∃y P(x, y) ⊃ ∀z Q(x, z))</span></p>
+<details class="recall"><summary>Řešení</summary>
+<pre class="res">k4: ∀x(¬∃y P(x, y) ∨ ∀z Q(x, z))
+k5: ∀x(∀y ¬P(x, y) ∨ ∀z Q(x, z))
+k6: ∀x∀y∀z(¬P(x, y) ∨ Q(x, z))
+k7: žádné ∃ → nic ke Skolemizaci
+klauzule:  ¬P(x, y) ∨ Q(x, z)</pre>
+<p>∃y nalevo od ⊃ se negací změnilo na ∀y. Proto žádná funkce.</p></details>
+
+<p class="zad"><b>2.</b> <span class="f">¬∀x∃y(P(x) ⊃ Q(y))</span></p>
+<details class="recall"><summary>Řešení</summary>
+<pre class="res">k4: ¬∀x∃y(¬P(x) ∨ Q(y))
+k5: ∃x∀y ¬(¬P(x) ∨ Q(y))  =  ∃x∀y(P(x) ∧ ¬Q(y))
+k7: x → a
+klauzule:  P(a)   a   ¬Q(y)</pre></details>
+
+<p class="zad"><b>3.</b> <span class="f">∀x∃y(P(x, y) ∨ ∃z(Q(z) ∧ ¬R(x, z)))</span></p>
+<details class="recall"><summary>Řešení</summary>
+<pre class="res">k6: ∀x∃y∃z(P(x, y) ∨ (Q(z) ∧ ¬R(x, z)))
+k7: y → f(x), z → g(x)       (obě mají před sebou jen ∀x)
+    P(x, f(x)) ∨ (Q(g(x)) ∧ ¬R(x, g(x)))
+k9: (P(x, f(x)) ∨ Q(g(x))) ∧ (P(x, f(x)) ∨ ¬R(x, g(x)))
+klauzule:  P(x, f(x)) ∨ Q(g(x))
+           P(x, f(x)) ∨ ¬R(x, g(x))</pre></details>
+
+<h2>Unifikace</h2>
+
+<p class="zad"><b>4.</b> <span class="f">P(x, f(y), y)</span> a <span class="f">P(g(z), f(a), z)</span></p>
+<details class="recall"><summary>Řešení</summary>
+<pre class="res">x proti g(z)    → x/g(z)
+f(y) proti f(a) → dovnitř: y/a
+y(= a) proti z  → z/a       (a tím x = g(a))
+σ = {x/g(a), y/a, z/a}
+oba:  P(g(a), f(a), a)</pre></details>
+
+<p class="zad"><b>5.</b> <span class="f">Q(f(x), x, b)</span> a <span class="f">Q(y, a, y)</span></p>
+<details class="recall"><summary>Řešení</summary>
+<pre class="res">f(x) proti y → y/f(x)
+x proti a    → x/a     (y je teď f(a))
+b proti y = f(a) → konstanta proti funkci → NEJDE</pre></details>
+
+<h2>Rezoluce sporem</h2>
+
+<p class="zad"><b>6.</b> <i>Každý muž (M) je smrtelný (Sm). Sokrates (s) je muž.</i> ⟶ <i>Někdo je smrtelný.</i></p>
+<details class="recall"><summary>Řešení</summary>
+<pre class="res">¬Z: ¬∃x Sm(x) = ∀x ¬Sm(x)
+1. ¬M(x) ∨ Sm(x)
+2. M(s)
+3. ¬Sm(y)
+4. Sm(s)     1 + 2, x/s
+5. #         3 + 4, y/s       → platný</pre>
+<p>Tady existence vyplývá, protože Sokrates je konkrétní muž (konstanta s v předpokladu).</p></details>
+
+<p class="zad"><b>7.</b> <i>Každý student (S) čte (Č) nějakou knihu (K). Petr (p) je student.</i> ⟶ <i>Existuje kniha.</i></p>
+<details class="recall"><summary>Řešení</summary>
+<pre class="res">P1: ∀x(S(x) ⊃ ∃y(K(y) ∧ Č(x, y)))
+¬Z: ¬∃y K(y) = ∀y ¬K(y)
+1. ¬S(x) ∨ K(f(x))
+2. ¬S(x) ∨ Č(x, f(x))
+3. S(p)
+4. ¬K(y)
+5. K(f(p))   1 + 3, x/p
+6. #         4 + 5, y/f(p)    → platný</pre></details>
+
+<p class="zad"><b>8.</b> <i>Když Adam (a) má rád (R) všechny, má rád i Petra (p).</i> Ověř, zda je logicky platná formule <span class="f">∀x R(a, x) ⊃ R(a, p)</span>.</p>
+<details class="recall"><summary>Řešení</summary>
+<pre class="res">Neguji CELOU formuli (ověřuji platnost, ne úsudek):
+¬(∀x R(a, x) ⊃ R(a, p)) = ∀x R(a, x) ∧ ¬R(a, p)
+1. R(a, x)
+2. ¬R(a, p)
+3. #         1 + 2, x/p       → formule je logicky platná</pre></details>
+
+<p class="zad"><b>9.</b> <i>Všichni ptáci (P) létají (L). Tučňák (t) nelétá.</i> ⟶ <i>Tučňák není pták.</i> A potom: ⟶ <i>Někdo je pták.</i></p>
+<details class="recall"><summary>Řešení</summary>
+<pre class="res">Závěr „Tučňák není pták“:     ¬Z: P(t)
+1. ¬P(x) ∨ L(x)
+2. ¬L(t)
+3. P(t)
+4. L(t)      1 + 3, x/t
+5. #         2 + 4            → platný
+
+Závěr „Někdo je pták“:        ¬Z: ∀y ¬P(y)
+1. ¬P(x) ∨ L(x)
+2. ¬L(t)
+3. ¬P(y)
+Žádné kladné P → # nevyjde   → neplatný</pre>
+<p>Druhý je past: ∀ předpoklad netvrdí, že nějaký pták existuje.</p></details>
+
+<h2>Vennovy diagramy</h2>
+
+<p class="zad"><b>10.</b> <i>Žádný had (H) nemá nohy (N). Někteří plazi (Pl) jsou hadi.</i> ⟶ <i>Někteří plazi nemají nohy.</i></p>
+<details class="recall"><summary>Řešení</summary>
+<div class="vg"><div id="v10"></div></div></details>
+
+<p class="zad"><b>11.</b> <i>Všichni hráči (H) jsou sportovci (S). Žádný šachista (Š) není hráč.</i> ⟶ <i>Žádný šachista není sportovec.</i></p>
+<details class="recall"><summary>Řešení</summary>
+<div class="vg"><div id="v11"></div></div>
+<p>Š∩S mimo H (modré tečky vpravo dole) není šedé → může tam někdo být → <b>neplatný</b>.</p></details>
+
+<h2>Formalizace</h2>
+
+<p class="zad"><b>12.</b> Zapiš: a) <i>Jen ten, kdo se učí (U), projde (P).</i> b) <i>Nikdo není dokonalý (D).</i> c) <i>Každý má někoho rád.</i> d) <i>Někoho mají rádi všichni.</i></p>
+<details class="recall"><summary>Řešení</summary>
+<pre class="res">a) ∀x(P(x) ⊃ U(x))         „jen“ otáčí směr
+b) ¬∃x D(x)  =  ∀x ¬D(x)
+c) ∀x∃y R(x, y)
+d) ∃y∀x R(x, y)            pořadí kvantifikátorů mění význam!</pre></details>
+
+</main>
+<script src="../assets/venn.js"></script>
+<script>
+Venn.draw("v10",{labels:["H","N","Pl"],shade:["AB","ABC"],x:["AC"],hi:["C","AC"],caption:"Šedě H∩N. × do H∩Pl → jen volná část mimo N. Závěr Pl mimo N (tečky) má × → <b>platný</b>."});
+Venn.draw("v11",{labels:["H","S","Š"],shade:["A","AC","ABC"],hi:["BC","ABC"],caption:"Šedě H mimo S a H∩Š. Závěr: Š∩S má být celé šedé, ale část mimo H není."});
+</script>
+</body>
+</html>

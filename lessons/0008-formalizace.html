@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lekce 8 · Formalizace vět</title>
+<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body>
+<main>
+<nav class="crumbs"><a href="0007-vennovy-diagramy.html">← Lekce 7: Vennovy diagramy</a> · <a href="0006-cvicny-test.html">Cvičný test</a></nav>
+
+<header class="lesson">
+<div class="kicker">ULM · test 3 · lekce 8 (navíc)</div>
+<h1>Formalizace: z věty formule</h1>
+<p class="lede">Asi 8 minut. Než můžeš dělat rezoluci slovního úsudku (cv9 1), musíš věty přepsat do PL1.</p>
+</header>
+
+<p class="win"><b>Na konci lekce umíš:</b> přepsat typické věty z cv7 a cv9 na formule, včetně pastí „pouze“ a „když“.</p>
+
+<h2>Zlaté pravidlo</h2>
+<div class="box rule">
+<p><b>∀ jde s ⊃. &nbsp;∃ jde s ∧.</b></p>
+<p>„Každý student se učí“ = <span class="f">∀x(S(x) ⊃ U(x))</span>. S ∧ by to znamenalo „všechno na světě je student a učí se“.</p>
+<p>„Někdo ze studentů se učí“ = <span class="f">∃x(S(x) ∧ U(x))</span>. S ⊃ by to byla pravda, i kdyby žádný student neexistoval.</p>
+</div>
+
+<h2>Tabulka vět</h2>
+<table>
+<tr><th>věta</th><th>formule</th></tr>
+<tr><td>Každý A je B</td><td><span class="f">∀x(A(x) ⊃ B(x))</span></td></tr>
+<tr><td>Některý A je B</td><td><span class="f">∃x(A(x) ∧ B(x))</span></td></tr>
+<tr><td>Žádný A není B &nbsp;/ Nikdo, kdo je A, není B</td><td><span class="f">∀x(A(x) ⊃ ¬B(x))</span></td></tr>
+<tr><td>Některý A není B</td><td><span class="f">∃x(A(x) ∧ ¬B(x))</span></td></tr>
+<tr><td><b>Pouze</b> A jsou B &nbsp;/ Jen A jsou B</td><td><span class="f">∀x(<b>B(x) ⊃ A(x)</b>)</span>, obráceně!</td></tr>
+<tr><td>A, <b>když</b> B &nbsp;/ A, jestliže B</td><td><span class="f">B ⊃ A</span>: „když“ uvádí <b>podmínku</b></td></tr>
+</table>
+
+<div class="box trap">
+<p><b>Past „pouze“:</b> „Pouze studenti mají index.“ Kdo má index, je student: <span class="f">∀x(I(x) ⊃ S(x))</span>. Neříká to, že každý student má index.</p>
+<p><b>Past „když“:</b> „Student absolvuje logiku, když se učí“ (cv7 g). Podmínka je „učí se“: <span class="f">∀x((S(x) ∧ U(x)) ⊃ A(x))</span>.</p>
+</div>
+
+<h2>Vztahy mezi dvěma (cv9)</h2>
+<p>„Karel má rád pouze ty, kdo mají rádi fotbal“ (cv9 1d): když má Karel někoho rád, ten má rád fotbal:</p>
+<p class="fb">∀x(R(k, x) ⊃ F(x))</p>
+<p>„Kdo zná Pavla a Marii, ten Marii lituje“ (cv9 1a):</p>
+<p class="fb">∀x((Z(x, p) ∧ Z(x, m)) ⊃ L(x, m))</p>
+<p class="side">Konkrétní jména (Karel, Pavel, Marie) jsou <b>konstanty</b>: k, p, m. Ne proměnné.</p>
+
+<details class="recall"><summary>Zkus sám (na papír): cv9 1b, první věta</summary>
+<p>„Všichni členové vedení (V) jsou majitelé obligací (O) nebo akcionáři (A).“</p>
+<p>Řešení: <span class="f">∀x(V(x) ⊃ (O(x) ∨ A(x)))</span>. Klauzule: <span class="f">¬V(x) ∨ O(x) ∨ A(x)</span>.</p>
+</details>
+
+<h2>Procvič</h2>
+<div class="quiz" id="q8"></div>
+
+
+<footer class="lesson">
+<p><b>Primární zdroj:</b> Cvičení 9, příklad 1 a–d (slovní úsudky) a cvičení 7 (stejné typy vět).</p>
+<p><b>Lekce:</b> <a href="0005-rezoluce-sporem.html">5 Rezoluce</a> · <a href="0006-cvicny-test.html">Cvičný test</a> · <a href="0007-vennovy-diagramy.html">7 Venn</a></p>
+</footer>
+</main>
+
+<script src="../assets/quiz.js"></script>
+<script>
+Quiz.mount("q8",[
+ {q:"„Každý pes štěká.“",
+  a:["<span class='f'>∀x(P(x) ∧ Š(x))</span>","<span class='f'>∀x(P(x) ⊃ Š(x))</span>","<span class='f'>∃x(P(x) ⊃ Š(x))</span>"], ok:1,
+  why:"∀ jde s ⊃."},
+ {q:"„Některé ryby jsou sloni.“",
+  a:["<span class='f'>∃x(R(x) ∧ S(x))</span>","<span class='f'>∃x(R(x) ⊃ S(x))</span>","<span class='f'>∀x(R(x) ∧ S(x))</span>"], ok:0,
+  why:"∃ jde s ∧: existuje věc, která je ryba A ZÁROVEŇ slon. S ⊃ by stačil třeba stůl: není ryba, takže R(stůl) ⊃ S(stůl) je pravda, a ∃ je splněno, i když žádná ryba slonem není."},
+ {q:"„Žádná ryba není inteligentní.“",
+  a:["<span class='f'>∃x(R(x) ∧ ¬I(x))</span>","<span class='f'>¬∀x(R(x) ⊃ I(x))</span>","<span class='f'>∀x(R(x) ⊃ ¬I(x))</span>"], ok:2,
+  why:"Každá ryba není inteligentní. První dvě říkají jen „některá ryba není“."},
+ {q:"„Pouze studenti mají index.“",
+  a:["<span class='f'>∀x(I(x) ⊃ S(x))</span>","<span class='f'>∀x(S(x) ⊃ I(x))</span>","<span class='f'>∃x(S(x) ∧ I(x))</span>"], ok:0,
+  why:"Pouze = obráceně. Kdo má index, je student."},
+ {q:"„Někteří fotbalisté nejsou inteligentní.“",
+  a:["<span class='f'>∀x(F(x) ⊃ ¬I(x))</span>","<span class='f'>∃x(F(x) ∧ ¬I(x))</span>","<span class='f'>∃x(F(x) ⊃ ¬I(x))</span>"], ok:1,
+  why:"∃ s ∧, negace jen u I."},
+ {q:"„Karel má rád pouze ty, kdo mají rádi pivo.“",
+  a:["<span class='f'>∀x(P(x) ⊃ R(k, x))</span>","<span class='f'>∃x(R(k, x) ∧ P(x))</span>","<span class='f'>∀x(R(k, x) ⊃ P(x))</span>"], ok:2,
+  why:"Když ho Karel má rád, má ten člověk rád pivo. První možnost by znamenala „Karel má rád všechny pivaře“."},
+ {q:"Klauzule pro „Žádná ryba není inteligentní“:",
+  a:["<span class='f'>¬R(x) ∨ ¬I(x)</span>","<span class='f'>R(x) ∨ ¬I(x)</span>","<span class='f'>¬R(a) ∨ ¬I(a)</span>"], ok:0,
+  why:"∀x(R ⊃ ¬I) → ¬R(x) ∨ ¬I(x). Je to ∀, takže zůstane proměnná."},
+ {q:"Klauzule pro negovaný závěr „Někteří sloni nejsou ryby“:",
+  a:["<span class='f'>S(a)</span> a <span class='f'>¬R(a)</span>","<span class='f'>¬S(x) ∨ R(x)</span>","<span class='f'>¬S(a) ∨ R(a)</span>"], ok:1,
+  why:"¬∃x(S ∧ ¬R) → ∀x(¬S ∨ R). ¬∃ dá ∀, takže proměnná, žádné a."}
+]);
+</script>
+</body>
+</html>

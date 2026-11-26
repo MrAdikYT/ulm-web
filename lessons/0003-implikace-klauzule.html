@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lekce 3 · Implikace a klauzule</title>
+<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body>
+<main>
+<nav class="crumbs"><a href="0002-devet-kroku.html">← Lekce 2: 9 kroků</a> · <a href="../reference/skolem-9-kroku.html">Reference: 9 kroků</a></nav>
+
+<header class="lesson">
+<div class="kicker">ULM · test 3 · lekce 3 ze 5</div>
+<h1>Implikace, klauzule, roznásobení</h1>
+<p class="lede">Asi 10 minut. Tři malé věci, bez kterých rezoluce nepůjde. Přesně ty ti chyběly v lekci 2.</p>
+</header>
+
+<p class="win"><b>Na konci lekce umíš:</b> přepsat ⊃ bez váhání, poznat klauzuli a roznásobit závorku tak, aby z ní vyšly klauzule.</p>
+
+<h2>1. Implikace: ⊃ se mění na ∨</h2>
+<div class="box rule">
+<p class="fb" style="font-size:1.15em">A ⊃ B &nbsp;⟺&nbsp; ¬A ∨ B</p>
+<p>Česky: „<b>buď</b> neplatí předpoklad, <b>nebo</b> platí závěr“.</p>
+</div>
+<p>„Když prší, je mokro“ znamená totéž co „neprší, <b>nebo</b> je mokro“. Jediný případ, kdy to je lež: prší (A = 1) a mokro není (B = 0).</p>
+<table>
+<tr><th>A</th><th>B</th><th>A ⊃ B</th><th>¬A ∨ B</th></tr>
+<tr><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+<tr><td>1</td><td>0</td><td><b>0</b></td><td><b>0</b></td></tr>
+<tr><td>0</td><td>1</td><td>1</td><td>1</td></tr>
+<tr><td>0</td><td>0</td><td>1</td><td>1</td></tr>
+</table>
+<p class="side">Jak si vybavit, jestli ∧, nebo ∨: s ∧ by implikace byla pravdivá jen v jednom řádku. Ona je ale nepravdivá jen v jednom řádku, a to umí ∨.</p>
+<p>A negace implikace (to potřebuješ, když v rezoluci neguješ závěr):</p>
+<p class="fb">¬(A ⊃ B) &nbsp;⟺&nbsp; A ∧ ¬B &nbsp;&nbsp;„prší a mokro není“</p>
+
+<h2>2. Co je klauzule</h2>
+<div class="box rule">
+<p><b>Literál</b> = atom nebo jeho negace: <span class="f">P(x)</span>, <span class="f">¬Q(a, y)</span>.</p>
+<p><b>Klauzule</b> = literály spojené <b>jen pomocí ∨</b>: <span class="f">¬P(x) ∨ Q(x) ∨ R(a)</span>. Uvnitř žádné ∧, žádné ⊃, ¬ jen přímo před atomem.</p>
+<p><b>Klauzulární forma</b> = klauzule spojené pomocí <b>∧</b>.</p>
+</div>
+<p>Představ si to jako <b>seznam pravidel</b>. Každý řádek seznamu je jedna klauzule. Platit musí <b>všechny řádky</b> (to je ∧ mezi nimi). V každém řádku stačí, aby platila <b>aspoň jedna</b> položka (to je ∨ uvnitř).</p>
+<p><span class="f">(¬P(x) ∨ Q(x)) ∧ R(a) ∧ (S(x) ∨ ¬T(x))</span> jsou <b>tři</b> klauzule:</p>
+<ol>
+<li><span class="f">¬P(x) ∨ Q(x)</span></li>
+<li><span class="f">R(a)</span>: i jeden literál je klauzule</li>
+<li><span class="f">S(x) ∨ ¬T(x)</span></li>
+</ol>
+<p>Proto ve 4. kroku chceš ∨: <span class="f">P(x) ⊃ Q(x)</span> se stane <span class="f">¬P(x) ∨ Q(x)</span>, a to už <b>je</b> klauzule.</p>
+
+<h2>3. Roznásobení (krok 9)</h2>
+<p>Cíl: <b>∧ venku, ∨ uvnitř</b>. Když je to naopak, tak to, co je mimo závorku, <b>rozdáš</b> každému členu v závorce:</p>
+<div class="box rule">
+<p class="fb">(A ∧ B) ∨ C &nbsp;⟶&nbsp; (A ∨ C) ∧ (B ∨ C)</p>
+<p>C jde k A, C jde k B. Mezi ně ∧. Uvnitř ∨.</p>
+</div>
+<p class="side">Spojky se jen <b>prohodí</b>: venku bylo ∨, teď je venku ∧. Když ti vyjde ∧ uvnitř závorky, je to špatně, protože to není klauzule.</p>
+<p>Dvě závorky: <b>každý s každým</b>.</p>
+<p class="fb">(A ∧ B) ∨ (C ∧ D) ⟶ (A ∨ C) ∧ (A ∨ D) ∧ (B ∨ C) ∧ (B ∨ D)</p>
+<p>Roznásobení <b>nemění význam</b>, je to ekvivalence, stejně jako 2·(3+4) = 2·3 + 2·4. Proto to v lekci 2 nebyla odpověď „jen splnitelnost“. Tu mají jen kroky 1 a 7.</p>
+
+<details class="recall"><summary>Zkus z hlavy (na papír): převeď na klauzule</summary>
+<p><span class="f">∀x(P(x) ⊃ (Q(x) ∧ R(x)))</span></p>
+<p>Řešení: krok 4 → <span class="f">¬P(x) ∨ (Q(x) ∧ R(x))</span>. Krok 9: ¬P(x) rozdáš → <span class="f">(¬P(x) ∨ Q(x)) ∧ (¬P(x) ∨ R(x))</span>. Dvě klauzule.</p>
+</details>
+
+<h2>Procvič</h2>
+<p>Formule čti znak po znaku. Pozor hlavně na ∧ a ∨.</p>
+<div class="quiz" id="q3"></div>
+
+
+<footer class="lesson">
+<p><b>Primární zdroj:</b> Cvičení 8 s řešením (krok 4 a krok 9 v příkladech) a přednáška (výroková logika: implikace, tabulka pravdivosti).</p>
+<p><b>Další:</b> <a href="0004-unifikace.html">Lekce 4: Unifikace</a> ·<a href="../reference/skolem-9-kroku.html">Reference: 9 kroků</a></p>
+</footer>
+</main>
+
+<script src="../assets/quiz.js"></script>
+<script>
+Quiz.mount("q3",[
+ {q:"Krok 4: <span class='f'>A ⊃ B</span> se přepíše na:",
+  a:["<span class='f'>¬A ∧ B</span>","<span class='f'>A ∨ ¬B</span>","<span class='f'>¬A ∨ B</span>"], ok:2,
+  why:"Buď neplatí předpoklad, NEBO platí závěr. Negace je u předpokladu A, spojka je ∨."},
+ {q:"Která z formulí je klauzule?",
+  a:["<span class='f'>¬P(x) ∨ Q(a)</span>","<span class='f'>¬P(x) ∧ Q(a)</span>","<span class='f'>¬(P(x) ∨ Q(a))</span>"], ok:0,
+  why:"Klauzule = literály spojené jen ∨. Druhá má ∧, třetí má ¬ před závorkou, ne před atomem."},
+ {q:"Kolik klauzulí je v <span class='f'>(¬P ∨ Q) ∧ R ∧ (S ∨ ¬T)</span>?",
+  a:["dvě klauzule","tři klauzule","pět klauzulí"], ok:1,
+  why:"Klauzule oddělují ∧: (¬P ∨ Q), R, (S ∨ ¬T). Samotné R je taky klauzule."},
+ {q:"Krok 9: <span class='f'>A ∨ (B ∧ C)</span> se změní na:",
+  a:["<span class='f'>(A ∨ B) ∧ (A ∨ C)</span>","<span class='f'>(A ∧ B) ∨ (A ∧ C)</span>","<span class='f'>(A ∨ B) ∧ C</span>"], ok:0,
+  why:"A se rozdá k B i k C. Venku ∧, uvnitř ∨."},
+ {q:"Distributivní zákony (krok 9) zachovávají:",
+  a:["jen splnitelnost formule","plnou ekvivalenci formule","jen pravdivost v modelu"], ok:1,
+  why:"Roznásobení je ekvivalentní úprava. Jen splnitelnost mají kroky 1 a 7."},
+ {q:"Klauzule pro <span class='f'>∀x(P(x) ⊃ Q(x))</span>:",
+  a:["<span class='f'>P(x) ∨ ¬Q(x)</span>","<span class='f'>¬P(x) ∧ Q(x)</span>","<span class='f'>¬P(x) ∨ Q(x)</span>"], ok:2,
+  why:"Krok 4: negace jde k předpokladu P(x), spojka ∨. ∀x se v klauzuli nepíše, proměnné jsou automaticky ∀."},
+ {q:"<span class='f'>¬(A ⊃ B)</span> je ekvivalentní:",
+  a:["<span class='f'>¬A ∨ ¬B</span>","<span class='f'>A ∧ ¬B</span>","<span class='f'>¬A ∧ B</span>"], ok:1,
+  why:"¬(¬A ∨ B) → De Morgan → A ∧ ¬B. „Prší a mokro není.“ Tohle potřebuješ při negaci závěru v rezoluci."},
+ {q:"Kolik klauzulí dá <span class='f'>(A ∧ B) ∨ (C ∧ D)</span> po kroku 9?",
+  a:["dvě klauzule","tři klauzule","čtyři klauzule"], ok:2,
+  why:"Každý s každým: (A∨C), (A∨D), (B∨C), (B∨D). 2 × 2 = 4."},
+ {q:"Opakování: <span class='f'>∀x ∃y ∀z ∃w P(x, y, z, w)</span> →",
+  a:["<span class='f'>∀x∀z P(x,f(z),z,g(x,z))</span>","<span class='f'>∀x∀z P(x,f(x),z,g(x,z))</span>","<span class='f'>∀x∀z P(x,f(x),z,g(z))</span>"], ok:1,
+  why:"Před ∃y je jen ∀x → f(x). Před ∃w jsou ∀x i ∀z → g(x, z). Nový symbol pro každé ∃."}
+]);
+</script>
+</body>
+</html>

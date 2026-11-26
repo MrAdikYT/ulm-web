@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lekce 7 · Vennovy diagramy</title>
+<link rel="stylesheet" href="../assets/course.css">
+<style>.venns{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:12px 0 24px}.venns>div{text-align:center}.vcap{font-size:.95rem;line-height:1.45;text-align:left;margin-top:4px}</style>
+</head>
+<body>
+<main>
+<nav class="crumbs"><a href="0006-cvicny-test.html">← Cvičný test</a> · <a href="../ulm-tahak.html">Velký tahák</a></nav>
+
+<header class="lesson">
+<div class="kicker">ULM · test 3 · lekce 7 (navíc)</div>
+<h1>Vennovy diagramy: úsudek kreslením</h1>
+<p class="lede">Asi 12 minut. Úsudky z cv7 rozhodneš bez formulí, jen třemi kruhy.</p>
+</header>
+
+<p class="win"><b>Na konci lekce umíš:</b> nakreslit předpoklady do tří kruhů a podle obrázku říct, jestli je úsudek platný.</p>
+
+<h2>Čtyři typy vět</h2>
+<p>Každý kruh je množina (třeba „sudá čísla“). Do diagramu kreslíš jen dvě značky: <b>šrafu</b> = tahle oblast je <b>prázdná</b>, a <b>×</b> = tady <b>určitě něco je</b>.</p>
+<table>
+<tr><th>věta</th><th>co nakreslíš</th></tr>
+<tr><td>Všechna A jsou B</td><td>vyšrafuj část <b>A mimo B</b></td></tr>
+<tr><td>Žádné A není B</td><td>vyšrafuj <b>průnik A a B</b></td></tr>
+<tr><td>Některá A jsou B</td><td><b>×</b> do průniku A a B</td></tr>
+<tr><td>Některá A nejsou B</td><td><b>×</b> do části A mimo B</td></tr>
+</table>
+<p class="side">Je to totéž jako v PL1: věty s „všechna / žádné“ jsou ∀ (šrafa), věty s „některá“ jsou ∃ (křížek). Jednotlivec („Karel se učí“) je taky křížek.</p>
+
+<h2>Postup</h2>
+<div class="box rule">
+<ol>
+<li>Nakresli 3 kruhy, jeden pro každý pojem.</li>
+<li><b>Nejdřív šrafy</b> (věty se „všechna / žádné“).</li>
+<li><b>Pak křížky</b> (věty s „některá“). Když je oblast rozdělená třetím kruhem:
+ <ul><li>jedna část je vyšrafovaná → × do té druhé,</li>
+ <li>obě jsou volné → × <b>na čáru</b> mezi ně. Znamená to „je to tady, ale nevím, ve které z nich“.</li></ul></li>
+<li><b>Závěr do diagramu nekresli.</b> Jen se podívej, jestli už tam je:
+ <ul><li>závěr „všechna / žádné“ → potřebná oblast musí být <b>celá vyšrafovaná</b>,</li>
+ <li>závěr „některá“ → × musí ležet <b>určitě uvnitř</b> potřebné oblasti, ne na čáře, která z ní vede ven.</li></ul></li>
+</ol>
+</div>
+<p>Proč nejdřív šrafy: šrafa ti řekne, kam křížek <b>nesmí</b>. Kdybys dal × dřív, mohl bys ho dát do oblasti, která je ve skutečnosti prázdná.</p>
+
+<h2>Než začneš: proč se kruhy vždycky překrývají</h2>
+<p>Kruhy kreslíš <b>vždycky stejně</b>, se všemi průniky, i když víš, že sudá a lichá čísla nemají nic společného. Diagram na začátku „nic neví“. Že je nějaká oblast prázdná, mu řekneš teprve <b>šedou výplní</b>.</p>
+<div class="box rule">
+<p><b>Legenda:</b> &nbsp;<b>šedá</b> = tady nic není &nbsp;·&nbsp; <b style="color:var(--bad)">×</b> = tady určitě něco je &nbsp;·&nbsp; <b style="color:var(--accent)">modré tečky</b> = oblast, na kterou se ptá závěr</p>
+</div>
+
+<h2>Příklad 1: cv7 a) platný</h2>
+<p><i>Všechny počítače (Po) mají procesor (Pr). Všechno, co má procesor, potřebuje elektřinu (E). ⟶ Všechny počítače potřebují elektřinu.</i></p>
+<div class="venns">
+<div id="a1"></div><div id="a2"></div><div id="a3"></div>
+</div>
+
+<h2>Příklad 2: cv7 b) platný</h2>
+<p><i>Žádné sudé číslo (S) není liché (L). Některá lichá čísla jsou prvočísla (P). ⟶ Některá prvočísla nejsou sudá.</i></p>
+<div class="venns">
+<div id="b1"></div><div id="b2"></div><div id="b3"></div>
+</div>
+
+<h2>Příklad 3: cv7 c) neplatný</h2>
+<p><i>Některé programy (Pr) studenti opisují (O). Všechny projekty z Javy (J) jsou programy. ⟶ Některé projekty z Javy jsou opsány.</i></p>
+<div class="venns">
+<div id="c1"></div><div id="c2"></div><div id="c3"></div>
+</div>
+
+<div class="box trap">
+<p><b>Past (stejná jako u rezoluce):</b> z vět „všechna…“ <b>nikdy</b> neplyne „některá…“. Věta „všechny počítače jsou stroje“ netvrdí, že nějaký počítač existuje.</p>
+<p><b>Druhá past (cv7 k):</b> když si předpoklady <b>odporují</b> (× v oblasti, která je vyšrafovaná), je úsudek <b>platný</b>. Ze sporu plyne cokoli, stejně jako # v rezoluci.</p>
+</div>
+
+<details class="recall"><summary>Zkus sám (na papír): cv7 s)</summary>
+<p>Nikdo s fialovými vlasy (F) není mladý (M). Někteří s fialovými vlasy pijí mléko (Ml). ⟶ Někteří, kteří pijí mléko, nejsou mladí.</p>
+<p>Šrafa F∩M. × do F∩Ml, jeho část v M je vyšrafovaná, takže × jde do F∩Ml mimo M. Ten × je v Ml mimo M → <b>platný</b>.</p>
+</details>
+
+<h2>Procvič</h2>
+<div class="quiz" id="q7"></div>
+
+
+<footer class="lesson">
+<p><b>Primární zdroj:</b> Cvičení 7: Vennovy diagramy, příklady a–t. Platné: a, b, d, h, k, s. Neplatné: c, f, g, j, q.</p>
+<p><b>Další:</b> <a href="0008-formalizace.html">Lekce 8: Formalizace vět</a> · <a href="0006-cvicny-test.html">Cvičný test</a></p>
+</footer>
+</main>
+
+<script src="../assets/venn.js"></script>
+<script>
+const A=["Po","Pr","E"],B=["S","L","P"],Cc=["Pr","O","J"];
+Venn.draw("a1",{labels:A,shade:["A","AC"],caption:"<b>1.</b> „Všechny Po mají Pr“ → Po <b>mimo</b> Pr je prázdné → šedá."});
+Venn.draw("a2",{labels:A,shade:["A","AC","B","AB"],caption:"<b>2.</b> „Vše s Pr potřebuje E“ → Pr <b>mimo</b> E je prázdné → další šedá."});
+Venn.draw("a3",{labels:A,shade:["A","AC","B","AB"],hi:["A","AB"],caption:"<b>3. Závěr</b> „Všechny Po potřebují E“: Po mimo E (modré tečky) je <b>celé šedé</b>. ✔ Platný."});
+Venn.draw("b1",{labels:B,shade:["AB","ABC"],caption:"<b>1.</b> „Žádné S není L“ → průnik S a L je prázdný → šedá."});
+Venn.draw("b2",{labels:B,shade:["AB","ABC"],x:["BC"],caption:"<b>2.</b> „Některá L jsou P“ → × do průniku L a P. Jeho část v S je šedá, takže × jde do volné části."});
+Venn.draw("b3",{labels:B,shade:["AB","ABC"],x:["BC"],hi:["C","BC"],caption:"<b>3. Závěr</b> „Některá P nejsou S“: potřebuju × v P mimo S (modré tečky). × tam <b>je</b>. ✔ Platný."});
+Venn.draw("c1",{labels:Cc,shade:["C","BC"],caption:"<b>1.</b> Nejdřív věta s „všechny“: J <b>mimo</b> Pr je prázdné → šedá."});
+Venn.draw("c2",{labels:Cc,shade:["C","BC"],line:[["AB","ABC"]],caption:"<b>2.</b> „Některé Pr jsou O“ → průnik Pr a O. Kruh J ho dělí na dvě volné části, nevíme do které → × <b>na čáru</b>."});
+Venn.draw("c3",{labels:Cc,shade:["C","BC"],line:[["AB","ABC"]],hi:["ABC"],caption:"<b>3. Závěr</b> „Některé J jsou O“: potřebuju × určitě v modré oblasti. × je na čáře, může být i mimo J. ✘ Neplatný."});
+</script>
+<script src="../assets/quiz.js"></script>
+<script>
+const U=(a,b,z)=>`<div class="usudek">${a}<br>${b}<hr>${z}</div>`;
+const P=id=>`<div id="${id}"></div>`;
+const E=U("Někteří fotbalisté (F) nejsou inteligentní (I).","Všichni fotbalisté jsou sportovci (Sp).","Někteří sportovci nejsou inteligentní.");
+const PS=U("Všichni psi (P) jsou savci (S), ale neumí létat (L).","Někteří savci nejsou psi.","Někteří savci umí létat.");
+Quiz.mount("q7",[
+ {q:"cv7 e)"+E+"Krok 1: nakresli větu se „všichni“. Který obrázek je správně?", pics:true,
+  a:[P("e1b"),P("e1a"),P("e1c")], ok:1,
+  why:"„Všichni F jsou Sp“: fotbalista mimo sportovce neexistuje → šedá je F mimo Sp."},
+ {q:"cv7 e) Krok 2: přidej „Někteří F nejsou I“. Kam patří ×?", pics:true,
+  a:[P("e2a"),P("e2b"),P("e2c")], ok:2,
+  why:"× musí být v F mimo I. Ta oblast má dvě části, jedna je šedá (prázdná), takže × jde do té volné: F ∩ Sp mimo I."},
+ {q:"cv7 e) Krok 3: závěr „Někteří Sp nejsou I“ (modré tečky). Je úsudek platný?"+P("e3"),
+  a:["úsudek je platný","úsudek je neplatný"], ok:0,
+  why:"× leží v Sp mimo I. Takový sportovec určitě existuje."},
+ {q:"cv7 p)"+PS+"Šedé jsou už obě věty se „všichni“. Kam patří × za „Někteří S nejsou P“?"+P("p0"), pics:true,
+  a:[P("p1a"),P("p1b"),P("p1c")], ok:1,
+  why:"S mimo P má dvě volné části (s L a bez L). Nevíme do které → × na čáru."},
+ {q:"cv7 p) Závěr „Někteří S umí létat“ (modré tečky). Je úsudek platný?"+P("p2"),
+  a:["úsudek je platný","úsudek je neplatný"], ok:1,
+  why:"× je na čáře, takže ten savec může být i mimo L. Nevíme jistě, že nějaký savec létá."},
+ {q:"cv7 j)"+U("Student (St) absolvuje logiku (Ab), když se učí (U).","Student Karel se neučí.","Karel neabsolvuje logiku.")+"Diagram je hotový. Je úsudek platný?"+P("j1"),
+  a:["úsudek je platný","úsudek je neplatný"], ok:1,
+  why:"Karel (×) je student mimo U, ale na čáře kruhu Ab. Může logiku absolvovat i bez učení."},
+ {q:"cv7 d)"+U("Nikdo s červeným nosem (N) nemůže být premiér (P).","Všichni Valaši (V) mají červené nosy.","Žádný Valach nemůže být premiérem.")+"Je úsudek platný?"+P("d1"),
+  a:["úsudek je platný","úsudek je neplatný"], ok:0,
+  why:"V ∩ P (modré tečky) je celé šedé. Žádný Valach premiér neexistuje."},
+ {q:"cv7 m) Bez obrázku, nakresli si ho na papír."+U("Nikdo, kdo je nemocný (N) a velmi unavený (U), nechodí do práce (Pr).","Někteří chodí do práce velmi unavení.","Někteří velmi unavení nejsou nemocní."),
+  a:["úsudek je platný","úsudek je neplatný"], ok:0,
+  why:"Šedá N ∩ U ∩ Pr. × do U ∩ Pr: část v N je šedá, takže × jde do U ∩ Pr mimo N. Ten je v U mimo N → platný."}
+],{onRender:()=>{
+  const e=["F","I","Sp"],p=["P","S","L"];
+  Venn.draw("e1a",{labels:e,shade:["A","AB"]});
+  Venn.draw("e1b",{labels:e,shade:["C","BC"]});
+  Venn.draw("e1c",{labels:e,shade:["AC","ABC"]});
+  Venn.draw("e2a",{labels:e,shade:["A","AB"],x:["ABC"]});
+  Venn.draw("e2b",{labels:e,shade:["A","AB"],line:[["A","AC"]]});
+  Venn.draw("e2c",{labels:e,shade:["A","AB"],x:["AC"]});
+  Venn.draw("e3",{labels:e,shade:["A","AB"],x:["AC"],hi:["C","AC"]});
+  Venn.draw("p0",{labels:p,shade:["A","AC","ABC"]});
+  Venn.draw("p1a",{labels:p,shade:["A","AC","ABC"],x:["B"]});
+  Venn.draw("p1b",{labels:p,shade:["A","AC","ABC"],line:[["B","BC"]]});
+  Venn.draw("p1c",{labels:p,shade:["A","AC","ABC"],x:["BC"]});
+  Venn.draw("p2",{labels:p,shade:["A","AC","ABC"],line:[["B","BC"]],hi:["BC","ABC"]});
+  Venn.draw("j1",{labels:["St","U","Ab"],shade:["AB"],line:[["A","AC"]],hi:["A"]});
+  Venn.draw("d1",{labels:["N","P","V"],shade:["AB","ABC","C","BC"],hi:["BC","ABC"]});
+}});
+</script>
+</body>
+</html>

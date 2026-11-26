@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lekce 2 · 9 kroků</title>
+<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body>
+<main>
+<nav class="crumbs"><a href="0001-skolemizace.html">← Lekce 1: Skolemizace</a> · <a href="../reference/skolem-9-kroku.html">Reference: 9 kroků</a></nav>
+
+<header class="lesson">
+<div class="kicker">ULM · test 3 · lekce 2 ze 4</div>
+<h1>9 kroků: Skolemova klauzulární forma</h1>
+<p class="lede">Asi 12 minut. Skolemizaci už umíš, je to krok 7. Teď celý algoritmus kolem ní.</p>
+</header>
+
+<p class="win"><b>Na konci lekce umíš:</b> vyjmenovat 9 kroků ve správném pořadí, říct, které dva zachovávají jen splnitelnost, a převést krátkou formuli na klauzule.</p>
+
+<h2>Nepamatuj si 9 věcí, pamatuj si 4 fáze</h2>
+<div class="box rule">
+<p><b>1. Uklidit</b> (kroky 1–3)<br>
+&nbsp;1 existenční uzávěr · 2 nadbytečné kvantifikátory pryč · 3 přejmenovat proměnné</p>
+<p><b>2. Spojky</b> (kroky 4–5)<br>
+&nbsp;4 ⊃ a ≡ pryč · 5 ¬ dovnitř</p>
+<p><b>3. Kvantifikátory</b> (kroky 6–8)<br>
+&nbsp;6 kvantifikátory doprava · <b>7 Skolemizace</b> · 8 ∀ doleva</p>
+<p><b>4. Klauzule</b> (krok 9)<br>
+&nbsp;9 distributivní zákony</p>
+</div>
+<p>Logika pořadí: nejdřív si formuli <b>uklidíš</b>, pak zjednodušíš <b>spojky</b>, aby zbylo jen ¬, ∧, ∨. Pak vyřešíš <b>kvantifikátory</b> (Skolemizace uprostřed, s krokem 6 před ní a 8 za ní). Nakonec rozdělíš na <b>klauzule</b>.</p>
+
+<h3>Co který krok zachovává</h3>
+<p>Skoro všechny kroky jsou <b>ekvivalentní úpravy</b>: formule znamená přesně totéž. Výjimky jsou dvě:</p>
+<div class="box trap">
+<p><b>Krok 1 (uzávěr) a krok 7 (Skolemizace)</b> zachovávají <b>jen splnitelnost</b>. Výsledek není ekvivalentní původní formuli. Je ale splnitelný právě tehdy, když je splnitelná původní, a to rezoluci stačí, protože ta hledá spor.</p>
+</div>
+<p class="side">Pomůcka: oba „podezřelé“ kroky mají co dělat s <b>∃</b>. Krok 1 ∃ přidává, krok 7 ho odstraňuje.</p>
+
+<h2>Celý postup na příkladu</h2>
+<p>Převeď <span class="f">¬∀x(P(x) ⊃ ∃y Q(x, y))</span>. To je přesně situace z rezoluce, kde neguješ závěr.</p>
+<ol>
+<li><b>Kroky 1–3:</b> nic volného, nic nadbytečného, proměnné různé. Nic se neděje.</li>
+<li><b>Krok 4:</b> <span class="fb">¬∀x(¬P(x) ∨ ∃y Q(x, y))</span></li>
+<li><b>Krok 5:</b> negace dovnitř: ¬∀ → ∃¬, pak De Morgan, pak ¬∃ → ∀¬:<br><span class="fb">∃x(P(x) ∧ ∀y ¬Q(x, y))</span></li>
+<li><b>Krok 6:</b> ∀y už je jen nad svou částí. Nic.</li>
+<li><b>Krok 7:</b> ∃x je první, nic před ním → <span class="f">x := a</span>: <span class="fb">P(a) ∧ ∀y ¬Q(a, y)</span></li>
+<li><b>Krok 8:</b> <span class="fb">∀y[P(a) ∧ ¬Q(a, y)]</span></li>
+<li><b>Krok 9:</b> už je to konjunkce, takže klauzule jsou: <span class="f">{P(a)}</span> a <span class="f">{¬Q(a, y)}</span>.</li>
+</ol>
+
+<details class="recall"><summary>Zkus z hlavy (na papír): napiš všech 9 kroků</summary>
+<p>Napiš je bez koukání. Pak si to zkontroluj tady:</p>
+<ol>
+<li>existenční uzávěr</li><li>eliminace nadbytečných kvantifikátorů</li><li>přejmenování proměnných</li><li>eliminace ⊃, ≡</li><li>¬ dovnitř</li><li>kvantifikátory doprava</li><li>Skolemizace (eliminace ∃)</li><li>∀ doleva</li><li>distributivní zákony</li>
+</ol>
+</details>
+
+<h2>Procvič</h2>
+<p>Bez koukání nahoru. Formule čti <b>znak po znaku</b>: na testu je −1 za chybu a možnosti se liší třeba jen jedním písmenem (jako u f(x), f(x) v minulé lekci).</p>
+<div class="quiz" id="q2"></div>
+
+
+<footer class="lesson">
+<p><b>Primární zdroj:</b> Cvičení 8 s řešením, strana 1–2 (Krok 1 až Krok 9 a jejich použití v příkladech g–j).</p>
+<p><b>Další:</b> <a href="0003-implikace-klauzule.html">Lekce 3: Implikace a klauzule</a> ·<a href="../reference/skolem-9-kroku.html">Reference: 9 kroků</a></p>
+</footer>
+</main>
+
+<script src="../assets/quiz.js"></script>
+<script>
+Quiz.mount("q2",[
+ {q:"Které kroky zachovávají <b>jen splnitelnost</b>?",
+  a:["kroky 4 a 5","kroky 1 a 7","kroky 7 a 9"], ok:1,
+  why:"Krok 1 (existenční uzávěr) a krok 7 (Skolemizace). Oba pracují s ∃. Ostatní jsou ekvivalentní úpravy."},
+ {q:"Ve kterém kroku zmizí implikace ⊃?",
+  a:["v kroku 4","v kroku 5","v kroku 6"], ok:0,
+  why:"Krok 4: A ⊃ B → ¬A ∨ B. Krok 5 je až přesun negace dovnitř."},
+ {q:"Co následuje hned po kroku „¬ dovnitř“?",
+  a:["Skolemizace ∃","distributivní zákony","kvantifikátory doprava"], ok:2,
+  why:"Pořadí: 5 ¬ dovnitř → 6 kvantifikátory doprava → 7 Skolemizace."},
+ {q:"Kroky 4 a 5 na <span class='f'>¬∀x(P(x) ⊃ Q(x))</span> dají:",
+  a:["<span class='f'>∀x(¬P(x) ∨ Q(x))</span>","<span class='f'>∃x(P(x) ∧ ¬Q(x))</span>","<span class='f'>∃x(¬P(x) ∧ Q(x))</span>"], ok:1,
+  why:"¬∀x(¬P ∨ Q) → ∃x ¬(¬P ∨ Q) → ∃x(P ∧ ¬Q). Negace implikace = „předpoklad platí a závěr ne“."},
+ {q:"Krok 9 (distributivita): <span class='f'>(A ∧ B) ∨ C</span> se změní na:",
+  a:["<span class='f'>(A ∧ C) ∨ (B ∧ C)</span>","<span class='f'>(A ∨ B) ∧ (A ∨ C)</span>","<span class='f'>(A ∨ C) ∧ (B ∨ C)</span>"], ok:2,
+  why:"C se „rozdá“ do obou závorek: (A ∨ C) ∧ (B ∨ C). Výsledek jsou dvě klauzule."},
+ {q:"Proč se krok 6 (kvantifikátory doprava) dělá <b>před</b> Skolemizací?",
+  a:["funkce mají méně argumentů","zmizí všechny kvantifikátory ∀","formule bude vždy pravdivá"], ok:0,
+  why:"Když ∃ přestane být „pod“ nějakým ∀, dostane konstantu nebo menší funkci. Viz past z cv8 g)."},
+ {q:"Opakování Skolemizace: <span class='f'>∃x ∃y ∀z P(x, y, z)</span> →",
+  a:["<span class='f'>∀z P(a, a, z)</span>","<span class='f'>∀z P(a, b, z)</span>","<span class='f'>∀z P(z, b, z)</span>"], ok:1,
+  why:"Dvě ∃ bez ∀ před sebou → dvě RŮZNÉ konstanty a, b. Stejná konstanta dvakrát je chyba."},
+ {q:"Klauzule pro <span class='f'>∀x(P(x) ⊃ ∃y Q(x, y))</span>:",
+  a:["<span class='f'>¬P(x) ∧ Q(x, f(x))</span>","<span class='f'>P(x) ∨ Q(x, f(x))</span>","<span class='f'>¬P(x) ∨ Q(x, f(x))</span>"], ok:2,
+  why:"Krok 4: ¬P(x) ∨ ∃y Q(x,y). Krok 7: y je pod ∀x → f(x). Výsledek je jedna klauzule s ∨."},
+ {q:"Krok 2 na <span class='f'>∀x ∃y P(x)</span> dá:",
+  a:["<span class='f'>∀x P(x)</span>","<span class='f'>∃y P(y)</span>","<span class='f'>∀y P(x)</span>"], ok:0,
+  why:"y se v P(x) vůbec nevyskytuje, takže ∃y je nadbytečný a zmizí. To je přesně krok 2."}
+]);
+</script>
+</body>
+</html>

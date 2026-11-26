@@ -1,0 +1,493 @@
+<!doctype html>
+<html lang="cs">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tahák z logiky ULM</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+
+:root{
+  --bg:#f5f6fa; --surface:#ffffff; --ink:#1b2130; --muted:#5b6478; --line:#dde1ea;
+  --accent:#2f5bd3; --accent-soft:#e7edfc; --ok:#1d7a4a; --ok-soft:#e3f4ea; --bad:#b3362c; --bad-soft:#fbe7e5; --warn-soft:#fff5dc; --warn:#8a6200;
+  --f-display:"Space Grotesk",system-ui,sans-serif; --f-body:"IBM Plex Sans",system-ui,sans-serif; --f-mono:"JetBrains Mono","Cascadia Mono",Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#11141b; --surface:#191d27; --ink:#e6e9f0; --muted:#9aa3b6; --line:#2b3140;
+  --accent:#86a5ff; --accent-soft:#1e2944; --ok:#6fd39c; --ok-soft:#16301f; --bad:#ff8a7e; --bad-soft:#3a1d1a; --warn-soft:#332a10; --warn:#f0c860; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#11141b; --surface:#191d27; --ink:#e6e9f0; --muted:#9aa3b6; --line:#2b3140;
+  --accent:#86a5ff; --accent-soft:#1e2944; --ok:#6fd39c; --ok-soft:#16301f; --bad:#ff8a7e; --bad-soft:#3a1d1a; --warn-soft:#332a10; --warn:#f0c860; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:760px;margin:0 auto;padding-block:28px 80px}
+h1,h2,h3{font-family:var(--f-display);line-height:1.2;text-wrap:balance}
+h1{font-size:2rem;margin:0 0 6px}
+h2{font-size:1.45rem;margin:48px 0 12px;padding-top:12px;border-top:2px solid var(--line)}
+h3{font-size:1.1rem;margin:28px 0 8px}
+p{margin:0 0 12px}
+.lede{color:var(--muted);margin-bottom:18px}
+.tag{display:inline-block;font:600 .72rem var(--f-body);letter-spacing:.04em;text-transform:uppercase;padding:2px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent);vertical-align:middle;margin-left:6px}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:10px;border-bottom:1px solid var(--line);display:flex;gap:6px;overflow-x:auto;scrollbar-width:thin}
+nav a{flex:none;font-size:.85rem;padding:5px 10px;border-radius:999px;border:1px solid var(--line);color:var(--ink);text-decoration:none;background:var(--surface)}
+nav a:hover,nav a:focus-visible{border-color:var(--accent);color:var(--accent);outline:none}
+nav a.hot{border-color:var(--accent);color:var(--accent);font-weight:600}
+code,.f{font-family:var(--f-mono);font-size:.92em}
+.f{white-space:nowrap}
+.fb{font-family:var(--f-mono);font-size:.92em;white-space:normal}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:12px 0}
+.box.key{border-left:4px solid var(--accent)}
+.box.warn{background:var(--warn-soft);border-color:transparent}
+.box.warn strong{color:var(--warn)}
+.tw{overflow-x:auto;margin:12px 0}
+table{border-collapse:collapse;font-variant-numeric:tabular-nums;background:var(--surface);min-width:100%}
+th,td{border:1px solid var(--line);padding:6px 10px;text-align:center;vertical-align:top}
+th{background:var(--accent-soft);font-weight:600}
+td.l,th.l{text-align:left}
+.hl{background:var(--bad-soft);color:var(--bad);font-weight:600}
+.one{background:var(--ok-soft);font-weight:600}
+ol,ul{padding-left:22px;margin:0 0 12px}
+li{margin-bottom:4px}
+.steps li{margin-bottom:8px}
+.nine{counter-reset:k;list-style:none;padding:0}
+.nine li{counter-increment:k;display:grid;grid-template-columns:2.2rem 1fr;gap:10px;padding:10px 0;border-top:1px dashed var(--line)}
+.nine li::before{content:counter(k);font:700 1.1rem var(--f-display);color:var(--accent);text-align:center;background:var(--accent-soft);border-radius:8px;height:2rem;line-height:2rem}
+.nine li > div{min-width:0}
+.sat{font:600 .72rem var(--f-body);padding:1px 7px;border-radius:999px;background:var(--warn-soft);color:var(--warn);white-space:nowrap}
+.eq{font:600 .72rem var(--f-body);padding:1px 7px;border-radius:999px;background:var(--ok-soft);color:var(--ok);white-space:nowrap}
+details.try{background:var(--surface);border:1px dashed var(--accent);border-radius:10px;padding:10px 14px;margin:12px 0}
+details.try summary{cursor:pointer;font-weight:600;color:var(--accent)}
+details.try summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+details.try[open] summary{margin-bottom:8px}
+.venn{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin:12px 0}
+.venn figure{margin:0;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px;text-align:center;min-width:0}
+.venn svg{width:100%;max-width:220px;height:auto}
+.venn figcaption{font-size:.88rem;color:var(--muted)}
+.gates{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin:12px 0}
+.gate{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px;text-align:center;min-width:0}
+.gate svg{width:100%;max-width:130px;height:auto;display:block;margin:0 auto 4px}
+.gate svg *{stroke:var(--ink);stroke-width:2.2;fill:none}
+.gate b{font-family:var(--f-display)}
+.gate small{display:block;color:var(--muted);font-family:var(--f-mono)}
+.q{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:14px 0}
+.q h4{margin:0 0 10px;font-size:1rem;font-family:var(--f-body);font-weight:600}
+.qgroup{font:700 1.05rem var(--f-display);margin:26px 0 4px}
+.item{display:grid;grid-template-columns:1fr auto;gap:6px 12px;align-items:center;padding:8px 0;border-top:1px dashed var(--line)}
+.item .txt{min-width:0}
+.item .btns{display:flex;gap:6px}
+.item button{font:600 .85rem var(--f-body);padding:5px 12px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.item button:hover{border-color:var(--accent)}
+.item button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.item button:disabled{cursor:default;opacity:.55}
+.item .why{grid-column:1/-1;font-size:.9rem;padding:6px 10px;border-radius:8px}
+.item.right .why{background:var(--ok-soft)}
+.item.wrong .why{background:var(--bad-soft)}
+.item.right .why b{color:var(--ok)} .item.wrong .why b{color:var(--bad)}
+.score{position:sticky;bottom:calc(10px + env(safe-area-inset-bottom,0px));margin-top:16px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;background:var(--ink);color:var(--bg);border-radius:12px;padding:10px 14px;font-variant-numeric:tabular-nums}
+.score button{font:600 .85rem var(--f-body);background:var(--bg);color:var(--ink);border:0;border-radius:8px;padding:6px 12px;cursor:pointer}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+</style>
+
+<div class="wrap">
+<h1>Tahák z logiky ULM</h1>
+<p class="lede">Příprava na 3. test. Postaveno na cvičeních 6–9, přednášce o indukci (13. 11.) a vzorových testech 1 a 2. Značky jako ve cvičení: implikace <span class="f">⊃</span>, ekvivalence <span class="f">≡</span>, prázdná klauzule <span class="f">#</span> (nebo □).</p>
+
+<nav aria-label="Témata">
+  <a href="#co-bude" class="hot">Co bude na testu</a><a href="#skolem" class="hot">9 kroků (Skolem)</a><a href="#unifikace" class="hot">Unifikace</a><a href="#rezoluce" class="hot">Rezoluce sporem</a><a href="#venn">Vennovy diagramy</a><a href="#predikaty">Predikáty (cv6)</a><a href="#indukce">Indukce</a><a href="#vl">Opakování VL</a><a href="#cviceni" class="hot">Cvičný test 3</a><a href="#navic">Navíc: hradla</a>
+</nav>
+
+<h2 id="co-bude">Co bude na 3. testu</h2>
+<div class="box key">
+<p><b>Formát</b> (podle vzorových testů 1 a 2): <b>3 otázky</b>, každá má možnosti <b>a) b) c) d)</b>. U každé rozhoduješ pravda / nepravda. Správně <b>+1</b>, špatně <b>−1</b>, nevyplněno <b>0</b>. V každé otázce je aspoň jedna pravdivá a aspoň jedna nepravdivá možnost.</p>
+<p><b>Témata od minulého testu</b> (cv6 až cv9):</p>
+<ol>
+<li><b>Rezoluční metoda sporem v PL1</b> (cv9) ← to víš jistě</li>
+<li><b>Algoritmus převodu do Skolemovy klauzulární formy</b> = <b>9 kroků</b> (cv8)</li>
+<li><b>Skolemizace a unifikace</b> (cv8)</li>
+<li>Vennovy diagramy a platnost úsudků (cv7)</li>
+<li>Jazyk predikátové logiky: formalizace, negace, modely (cv6)</li>
+<li>Možná indukce (přednáška 13. 11.)</li>
+</ol>
+</div>
+<div class="box warn"><p><strong>Strategie:</strong> otázky budou spíš teoretické („co platí o metodě…“), jako u testu 1, kde byla otázka „Pomocí metody sémantického sporu můžeme…“. Nauč se hlavně, <b>co který krok dělá</b> a <b>co zachovává</b>. Tipovat se nevyplatí.</p></div>
+
+<h2 id="skolem">Algoritmus: Skolemova klauzulární forma (9 kroků) <span class="tag">cv8</span></h2>
+<p>K čemu: rezoluce umí pracovat jen s <b>klauzulemi</b>. Tímhle algoritmem z libovolné formule PL1 uděláš klauzule bez kvantifikátorů. Tohle je přesně postup z řešení cv8:</p>
+<ol class="nine">
+<li><div><b>Existenční uzávěr</b> <span class="sat">zachovává jen splnitelnost</span><br>Každou <b>volnou</b> proměnnou „zavřeš“ kvantifikátorem ∃ na začátku. Př.: <span class="f">P(x) → ∃x P(x)</span>.</div></li>
+<li><div><b>Eliminace nadbytečných kvantifikátorů</b> <span class="eq">ekvivalentní</span><br>Vyhodíš ∀x / ∃x, pokud x v jeho dosahu vůbec není. Př.: <span class="f">∀x∃y∀z∃v[P(z,y) ∧ Q(x,y)]</span>: v se nikde nevyskytuje, takže <span class="f">∃v</span> zmizí.</div></li>
+<li><div><b>Přejmenování proměnných</b> <span class="eq">ekvivalentní</span><br>Každý kvantifikátor dostane vlastní jméno proměnné. Př.: <span class="f">∀x P(x) ∨ ∃x Q(x) → ∀x P(x) ∨ ∃y Q(y)</span>.</div></li>
+<li><div><b>Eliminace ⊃ a ≡</b> <span class="eq">ekvivalentní</span><br><span class="f">A ⊃ B → ¬A ∨ B</span>,&nbsp; <span class="f">A ≡ B → (¬A ∨ B) ∧ (¬B ∨ A)</span>.</div></li>
+<li><div><b>Přesun ¬ dovnitř</b> <span class="eq">ekvivalentní</span><br>De Morgan a <span class="f">¬∀x A ≡ ∃x ¬A</span>, <span class="f">¬∃x A ≡ ∀x ¬A</span>, dokud ¬ nestojí jen před atomy.</div></li>
+<li><div><b>Přesun kvantifikátorů doprava</b> <span class="eq">ekvivalentní</span><br>Kvantifikátor „zúžíš“ jen na tu část, kde jeho proměnná je: <span class="f">Qx(A ∘ B(x)) ⇔ A ∘ Qx B(x)</span> (A neobsahuje x). Smysl: Skolemovy funkce pak mají méně argumentů.</div></li>
+<li><div><b>Eliminace ∃ = Skolemizace</b> <span class="sat">zachovává jen splnitelnost</span><br>Každé ∃y nahradíš:<br>• <b>konstantou</b> (a, b, c…), pokud před ním není žádné ∀,<br>• <b>funkcí</b> <span class="f">f(x₁,…,xₙ)</span> všech ∀-proměnných, které jsou <b>před ním</b>.<br>Každé ∃ dostane <b>nový</b> symbol.</div></li>
+<li><div><b>Přesun ∀ doleva</b> <span class="eq">ekvivalentní</span><br>Všechny ∀ dáš zase na začátek (díky kroku 3 se nic nepomíchá).</div></li>
+<li><div><b>Distributivní zákony</b> <span class="eq">ekvivalentní</span><br><span class="f">(A ∧ B) ∨ C ⇔ (A ∨ C) ∧ (B ∨ C)</span>. Dostaneš konjunkci klauzulí (KNF). Každá závorka = jedna klauzule, ∀ se vynechají.</div></li>
+</ol>
+<div class="box key">
+<p><b>Na test si zapamatuj:</b></p>
+<ul>
+<li>Jen kroky <b>1 (uzávěr)</b> a <b>7 (Skolemizace)</b> nejsou ekvivalentní, <b>zachovávají jen splnitelnost</b>. Všechny ostatní jsou ekvivalentní úpravy.</li>
+<li>Proto výsledek <b>není ekvivalentní</b> původní formuli, jen je <b>splnitelný právě tehdy</b>, když je splnitelná původní. Pro rezoluci (hledání sporu) to stačí.</li>
+<li>Pořadí: uzávěr → nadbytečné → přejmenuj → ⊃≡ pryč → ¬ dovnitř → kvantifikátory doprava → Skolem → ∀ doleva → distributivita.</li>
+</ul>
+</div>
+<h3>Skolemizace na příkladech z cv8</h3>
+<div class="tw"><table>
+<tr><th class="l">Formule</th><th class="l">Po Skolemizaci</th><th class="l">Proč</th></tr>
+<tr><td class="l f">∃x∀y∀z P(x,y,z)</td><td class="l f">∀y∀z P(a,y,z)</td><td class="l">∃x je první, žádné ∀ před ním → konstanta</td></tr>
+<tr><td class="l f">∃x∃y∀z P(x,y,z)</td><td class="l f">∀z P(a,b,z)</td><td class="l">dvě ∃ bez ∀ → dvě různé konstanty</td></tr>
+<tr><td class="l f">∀x∃y∀z P(x,y,z)</td><td class="l f">∀x∀z P(x,f(x),z)</td><td class="l">před ∃y je jen ∀x → f(x)</td></tr>
+<tr><td class="l f">∃x∀y∃z P(x,y,z)</td><td class="l f">∀y P(a,y,f(y))</td><td class="l">x → konstanta, z závisí jen na y</td></tr>
+<tr><td class="l f">∀x∃y∃z P(x,y,z)</td><td class="l f">∀x P(x,f(x),g(x))</td><td class="l">dvě ∃ → dvě <b>různé</b> funkce</td></tr>
+<tr><td class="l f">∀x∀y∃z P(x,y,z)</td><td class="l f">∀x∀y P(x,y,f(x,y))</td><td class="l">z závisí na x i y</td></tr>
+</table></div>
+<div class="box warn"><p><strong>Past z příkladu g):</strong> <span class="f">∀x∃y∀z∃v[P(z,y) ∧ Q(x,v)]</span>. Bez kroku 6 by vyšlo y = f(x). Krok 6 ale kvantifikátory rozdělí: <span class="f">∃y∀z P(z,y) ∧ ∀x∃v Q(x,v)</span>. Teď y nezávisí na x, takže je to <b>konstanta</b>: výsledek <span class="f">∀z∀x[P(z,a) ∧ Q(x,f(x))]</span>.</p></div>
+<details class="try"><summary>Zkus sám: Skolemizuj ∀x∃y∀z[(P(x,y) ⊃ Q(y,z)) ∨ Q(x,y)] (cv8 j)</summary>
+<ol>
+<li>Krok 4: <span class="fb">∀x∃y∀z[¬P(x,y) ∨ Q(y,z) ∨ Q(x,y)]</span></li>
+<li>Krok 6: z je jen v <span class="f">Q(y,z)</span>: <span class="fb">∀x∃y[¬P(x,y) ∨ ∀z Q(y,z) ∨ Q(x,y)]</span></li>
+<li>Krok 7: y závisí na x → <span class="f">f(x)</span>: <span class="fb">∀x[¬P(x,f(x)) ∨ ∀z Q(f(x),z) ∨ Q(x,f(x))]</span></li>
+<li>Krok 8: <span class="fb">∀x∀z[¬P(x,f(x)) ∨ Q(f(x),z) ∨ Q(x,f(x))]</span>, jedna klauzule.</li>
+</ol>
+</details>
+
+<h2 id="unifikace">Unifikace <span class="tag">cv8</span></h2>
+<p><b>Unifikace</b> = najít dosazení za <b>proměnné</b> tak, aby dva literály byly úplně stejné. Zápis <span class="f">x/a</span> = „za x dosaď a“. Potřebuješ ji v rezoluci, aby šlo spojit třeba <span class="f">¬P(x)</span> s <span class="f">P(c)</span>.</p>
+<div class="box key">
+<p><b>Postup:</b> porovnávej argumenty zleva doprava. U prvního rozdílu:</p>
+<ul>
+<li>jedna strana je <b>proměnná</b> → dosaď za ni druhou stranu (všude, v obou literálech),</li>
+<li>obě strany jsou <b>různé konstanty</b> (a vs b) → <b>nejde unifikovat</b>,</li>
+<li>různé <b>funkční symboly</b> (f(…) vs g(…)) → <b>nejde</b>,</li>
+<li>proměnnou nelze nahradit termem, který ji obsahuje (x vs f(x)) → <b>nejde</b>.</li>
+</ul>
+<p>Dosazovat se smí jen za proměnné, nikdy za konstanty (a, b) ani funkce.</p>
+</div>
+<div class="tw"><table>
+<tr><th class="l">Dvojice (cv8)</th><th class="l">Kroky</th><th class="l">Výsledek</th></tr>
+<tr><td class="l fb">P(x,y); P(z,g(t))</td><td class="l f">x/z, y/g(t)</td><td class="l fb">P(z,g(t))</td></tr>
+<tr><td class="l fb">P(f(x),z,g(y,a)); P(y,x,g(f(a),z))</td><td class="l f">y/f(x), x/z, z/a</td><td class="l fb">P(f(a),a,g(f(a),a))</td></tr>
+<tr><td class="l fb">P(x,b,f(x)); P(a,y,f(y))</td><td class="l f">x/a, y/b → f(a) vs f(b)</td><td class="l hl">nejde (a ≠ b)</td></tr>
+<tr><td class="l fb">P(x,f(x,z),h(a)); P(y,f(y,y),w)</td><td class="l f">x/y, y/z, w/h(a)</td><td class="l fb">P(z,f(z,z),h(a))</td></tr>
+<tr><td class="l fb">P(x,f(y),z); P(f(u),v,f(w))</td><td class="l f">x/f(u), v/f(y), z/f(w)</td><td class="l fb">P(f(u),f(y),f(w))</td></tr>
+</table></div>
+<details class="try"><summary>Zkus sám: unifikuj P(x, f(y), b) a P(a, z, y)</summary>
+<p>1. pozice: x vs a → <span class="f">x/a</span>. 2. pozice: f(y) vs z → <span class="f">z/f(y)</span>. 3. pozice: b vs y → <span class="f">y/b</span> (tím se i z změní na f(b)).<br>Výsledek: <span class="f">P(a, f(b), b)</span>, unifikátor <span class="f">{x/a, z/f(b), y/b}</span>.</p>
+</details>
+
+<h2 id="rezoluce">Rezoluční metoda sporem v PL1 <span class="tag">cv9</span></h2>
+<div class="box key">
+<p><b>Myšlenka (nepřímý důkaz):</b> chceš ukázat, že závěr plyne z premis. Předpokládáš <b>opak závěru</b> a ukážeš, že to dohromady s premisami vede ke <b>sporu</b> (prázdná klauzule <span class="f">#</span>).</p>
+<p><b>Rezoluční pravidlo:</b> <span class="f">{A, L} a {B, ¬L'}</span>, kde L a L' jdou unifikovat → rezolventa <span class="f">{A, B}</span> s provedeným dosazením.</p>
+</div>
+<h3>Postup krok za krokem</h3>
+<ol class="steps">
+<li><b>Formalizuj</b> premisy a závěr (∀ s ⊃, ∃ s ∧).</li>
+<li><b>Neguj závěr</b> (ne premisy!). <span class="f">¬∀x(H ⊃ ¬L) = ∃x(H ∧ L)</span>.</li>
+<li>Každou premisu a negovaný závěr převeď <b>zvlášť</b> do Skolemovy klauzulární formy (těch 9 kroků). Konstanty z různých formulí musí být různé.</li>
+<li>Napiš seznam klauzulí, <b>v každé klauzuli jiné jméno proměnné</b> (x, y, z…).</li>
+<li>Rezolvuj: vždy dvojice <span class="f">P(…)</span> a <span class="f">¬P(…)</span>, nejdřív je unifikuj.</li>
+<li>Vyjde <span class="f">#</span> → <b>úsudek je platný</b> (vyplývá). Nic nového už nejde odvodit → <b>neplatný</b> (nevyplývá).</li>
+</ol>
+<p><b>Ověření, že formule je tautologie</b> (cv8 př. 3, cv9 př. 2): stejné, jen neguješ <b>celou formuli</b>. Vyjde <span class="f">#</span> → je to tautologie (logicky platná).</p>
+<div class="box">
+<p><b>Příklad (cv8 4a, řešení od učitele):</b><br>Nikdo, kdo trpí klaustrofobií, nemůže pracovat jako liftboy. Všichni horolezci trpí klaustrofobií. ⊢ Žádný horolezec nemůže pracovat jako liftboy.</p>
+<p class="fb">∀x[K(x) ⊃ ¬L(x)]<br>∀x[H(x) ⊃ K(x)]<br>závěr ∀x[H(x) ⊃ ¬L(x)], negace: ∃x[H(x) ∧ L(x)] → H(c) ∧ L(c)</p>
+<ol>
+<li class="fb">¬K(x) ∨ ¬L(x)</li>
+<li class="fb">¬H(y) ∨ K(y)</li>
+<li class="fb">H(c)</li>
+<li class="fb">L(c)</li>
+<li class="fb">¬K(c) &nbsp;… z 1 a 4, x/c</li>
+<li class="fb">K(c) &nbsp;… z 2 a 3, y/c</li>
+<li class="fb"># &nbsp;… z 5 a 6 → <b>vyplývá</b></li>
+</ol>
+</div>
+<div class="box">
+<p><b>Příklad, který NEvyplývá (cv8 4b):</b> Všechny dřevěné stoly jsou stoly. Všechny dřevěné stoly jsou ze dřeva. ⊢ Některé stoly jsou ze dřeva.</p>
+<p class="fb">1. ¬D(x) ∨ S(x)&nbsp;&nbsp; 2. ¬D(y) ∨ R(y)&nbsp;&nbsp; 3. ¬S(z) ∨ ¬R(z) (negovaný závěr)</p>
+<p>Vznikají jen další klauzule typu <span class="f">¬D(x) ∨ …</span>, nikdy #. <b>Nevyplývá</b>, protože premisy nezaručují, že nějaký dřevěný stůl <b>existuje</b>. Aby to platilo, musela by se přidat premisa <span class="f">∃x D(x)</span>.</p>
+</div>
+<div class="box warn"><p><strong>Pasti:</strong></p>
+<ul>
+<li>„Všechna A jsou B“ <b>neříká, že nějaké A existuje</b>. Z premis jen s ∀ nikdy neplyne závěr s ∃.</li>
+<li>Negovaný závěr s ∀ se změní na ∃ → po Skolemizaci <b>nová konstanta</b> (c).</li>
+<li>Rezolvuje se přes <b>jednu</b> dvojici literálů najednou.</li>
+<li>Konstantu nejde dosadit za jinou konstantu: <span class="f">P(a)</span> a <span class="f">¬P(b)</span> nerezolvuješ.</li>
+</ul></div>
+<details class="try"><summary>Zkus sám: cv9 1a „Kdo zná Pavla a Marii, ten Marii lituje. Někteří nelitují Marii, ačkoliv ji znají. ⊢ Někdo zná Marii, ale ne Pavla.“</summary>
+<p class="fb">Z(x,y) = x zná y, L(x,y) = x lituje y, p = Pavel, m = Marie<br>
+P1: ∀x[(Z(x,p) ∧ Z(x,m)) ⊃ L(x,m)]<br>
+P2: ∃x[Z(x,m) ∧ ¬L(x,m)] → Z(a,m), ¬L(a,m)<br>
+Závěr: ∃x[Z(x,m) ∧ ¬Z(x,p)], negace: ∀x[¬Z(x,m) ∨ Z(x,p)]</p>
+<ol>
+<li class="fb">¬Z(x,p) ∨ ¬Z(x,m) ∨ L(x,m)</li>
+<li class="fb">Z(a,m)</li>
+<li class="fb">¬L(a,m)</li>
+<li class="fb">¬Z(y,m) ∨ Z(y,p)</li>
+<li class="fb">Z(a,p) … 2, 4, y/a</li>
+<li class="fb">¬Z(a,p) ∨ ¬Z(a,m) … 1, 3, x/a</li>
+<li class="fb">¬Z(a,m) … 5, 6</li>
+<li class="fb"># … 2, 7 → <b>vyplývá</b></li>
+</ol>
+</details>
+<details class="try"><summary>Zkus sám: je [∀x(L(x) ⊃ ¬S(x)) ∧ ∃x(L(x) ∧ P(x))] ⊃ ∃x(P(x) ∧ ¬S(x)) tautologie? (cv9 2d)</summary>
+<p>Negace celé formule = premisy platí a závěr ne:</p>
+<ol>
+<li class="fb">¬L(x) ∨ ¬S(x)</li>
+<li class="fb">L(a)</li>
+<li class="fb">P(a)</li>
+<li class="fb">¬P(y) ∨ S(y) &nbsp;(z negace ∃x(P ∧ ¬S))</li>
+<li class="fb">S(a) … 3, 4, y/a</li>
+<li class="fb">¬S(a) … 1, 2, x/a</li>
+<li class="fb"># … 5, 6 → <b>tautologie</b></li>
+</ol>
+</details>
+
+<h2 id="venn">Vennovy diagramy <span class="tag">cv7</span></h2>
+<p>Úsudek se třemi pojmy nakreslíš do tří kruhů. Pak:</p>
+<ol class="steps">
+<li><b>Nejdřív obecné premisy</b> (všichni / žádný): <b>vyšrafuj</b> oblasti, které musí být <b>prázdné</b>.</li>
+<li><b>Pak existenční premisy</b> (někteří): dej <b>×</b> do oblasti, kde určitě něco je. Když × může ležet ve dvou oblastech, dej ho na hranici (nevíš kam).</li>
+<li>Úsudek je <b>platný</b>, jen když závěr je v diagramu <b>už nakreslený</b>. Když jen „může být“, je neplatný.</li>
+</ol>
+<div class="venn">
+<figure>
+<svg viewBox="0 0 220 140" role="img" aria-label="Všechna A jsou B: část A mimo B je vyšrafovaná">
+<defs>
+<pattern id="h1" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="8" style="stroke:var(--accent);stroke-width:3"/></pattern>
+<mask id="m1"><rect width="220" height="140" fill="#fff"/><circle cx="130" cy="70" r="52" fill="#000"/></mask>
+</defs>
+<circle cx="85" cy="70" r="52" fill="url(#h1)" mask="url(#m1)"/>
+<circle cx="85" cy="70" r="52" style="fill:none;stroke:var(--ink);stroke-width:2"/>
+<circle cx="130" cy="70" r="52" style="fill:none;stroke:var(--ink);stroke-width:2"/>
+<text x="55" y="74" style="fill:var(--ink);font:700 16px sans-serif">A</text>
+<text x="160" y="74" style="fill:var(--ink);font:700 16px sans-serif">B</text>
+</svg>
+<figcaption>„Všechna A jsou B“: A mimo B je prázdné</figcaption>
+</figure>
+<figure>
+<svg viewBox="0 0 220 140" role="img" aria-label="Žádné A není B: průnik A a B je vyšrafovaný">
+<defs>
+<pattern id="h2" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="8" style="stroke:var(--accent);stroke-width:3"/></pattern>
+<clipPath id="c2"><circle cx="130" cy="70" r="52"/></clipPath>
+</defs>
+<circle cx="85" cy="70" r="52" fill="url(#h2)" clip-path="url(#c2)"/>
+<circle cx="85" cy="70" r="52" style="fill:none;stroke:var(--ink);stroke-width:2"/>
+<circle cx="130" cy="70" r="52" style="fill:none;stroke:var(--ink);stroke-width:2"/>
+<text x="55" y="74" style="fill:var(--ink);font:700 16px sans-serif">A</text>
+<text x="160" y="74" style="fill:var(--ink);font:700 16px sans-serif">B</text>
+</svg>
+<figcaption>„Žádné A není B“: průnik je prázdný</figcaption>
+</figure>
+<figure>
+<svg viewBox="0 0 220 140" role="img" aria-label="Některá A jsou B: křížek v průniku">
+<circle cx="85" cy="70" r="52" style="fill:none;stroke:var(--ink);stroke-width:2"/>
+<circle cx="130" cy="70" r="52" style="fill:none;stroke:var(--ink);stroke-width:2"/>
+<text x="55" y="74" style="fill:var(--ink);font:700 16px sans-serif">A</text>
+<text x="160" y="74" style="fill:var(--ink);font:700 16px sans-serif">B</text>
+<text x="99" y="78" style="fill:var(--bad);font:700 22px sans-serif">×</text>
+</svg>
+<figcaption>„Některá A jsou B“: × v průniku</figcaption>
+</figure>
+</div>
+<div class="tw"><table>
+<tr><th class="l">Úsudek z cv7</th><th>Platný?</th><th class="l">Proč</th></tr>
+<tr><td class="l">a) Počítače mají procesor, co má procesor, potřebuje elektřinu ⊢ počítače potřebují elektřinu</td><td class="one">ano</td><td class="l">řetěz ∀: P ⊆ R ⊆ E</td></tr>
+<tr><td class="l">b) Žádné sudé není liché, některá lichá jsou prvočísla ⊢ některá prvočísla nejsou sudá</td><td class="one">ano</td><td class="l">× v Lichá∩Prvočísla, a tam sudá být nemohou</td></tr>
+<tr><td class="l">c) Některé programy jsou opsané, projekty z Javy jsou programy ⊢ některé projekty z Javy jsou opsané</td><td class="hl">ne</td><td class="l">× může ležet v programech mimo Javu</td></tr>
+<tr><td class="l">f) Každý počítač je stroj, každý počítač má procesor ⊢ některé stroje mají procesor</td><td class="hl">ne</td><td class="l">∀ neříká, že nějaký počítač existuje</td></tr>
+<tr><td class="l">g) Absolvuje, když se učí; někteří se neučí ⊢ někteří neabsolvují</td><td class="hl">ne</td><td class="l">popření předpokladu: neučí se, ale mohl by projít</td></tr>
+<tr><td class="l">h) Absolvuje, když se učí; Karel se učí ⊢ Karel absolvuje</td><td class="one">ano</td><td class="l">modus ponens</td></tr>
+<tr><td class="l">j) … Karel se neučí ⊢ Karel neabsolvuje</td><td class="hl">ne</td><td class="l">popření předpokladu</td></tr>
+<tr><td class="l">k) Sloni jsou inteligentní, žádná ryba není inteligentní, některé ryby jsou sloni ⊢ …</td><td class="one">ano</td><td class="l">premisy si odporují, ze sporu plyne cokoli</td></tr>
+<tr><td class="l">q) Všichni psi koušou, Alík není pes ⊢ Alík nekouše</td><td class="hl">ne</td><td class="l">o ne-psech premisa nic neříká</td></tr>
+<tr><td class="l">s) Nikdo s fialovými vlasy není mladý, někteří s fialovými vlasy pijí mléko ⊢ někteří, kdo pijí mléko, nejsou mladí</td><td class="one">ano</td><td class="l">× ve Fialové∩Mléko, tam mladí být nemohou</td></tr>
+</table></div>
+
+<h2 id="predikaty">Jazyk predikátové logiky <span class="tag">cv6</span></h2>
+<div class="box key">
+<p><b>Zlaté pravidlo:</b> <span class="f">∀</span> se pojí s <span class="f">⊃</span>, <span class="f">∃</span> se pojí s <span class="f">∧</span>.</p>
+</div>
+<div class="tw"><table>
+<tr><th class="l">Věta</th><th class="l">Formule</th></tr>
+<tr><td class="l">Každé A je B.</td><td class="l f">∀x (A(x) ⊃ B(x))</td></tr>
+<tr><td class="l">Některé A je B.</td><td class="l f">∃x (A(x) ∧ B(x))</td></tr>
+<tr><td class="l">Žádné A není B.</td><td class="l f">∀x (A(x) ⊃ ¬B(x))</td></tr>
+<tr><td class="l">Některé A není B.</td><td class="l f">∃x (A(x) ∧ ¬B(x))</td></tr>
+<tr><td class="l">Jen A jsou B.</td><td class="l f">∀x (B(x) ⊃ A(x))</td></tr>
+</table></div>
+<ul>
+<li><b>Negace:</b> <span class="f">¬∀x φ ≡ ∃x ¬φ</span>, <span class="f">¬∃x φ ≡ ∀x ¬φ</span>, a <span class="f">¬(A ⊃ B) ≡ A ∧ ¬B</span>. Negace „Každý student napsal test“ je „<b>Některý</b> student test nenapsal“.</li>
+<li><b>Pořadí kvantifikátorů</b> (P = má rád): <span class="f">∃x∀y P(x,y)</span> někdo má rád všechny; <span class="f">∀x∃y P(x,y)</span> každý má někoho rád. Z prvního plyne <span class="f">∀y∃x P(x,y)</span>, obráceně ne.</li>
+<li><b>Model</b> = interpretace, kde je formule pravdivá. ∀: zkontroluj všechny prvky, ∃: stačí jeden svědek.</li>
+<li><b>Term</b> (x, a, f(x)) je věc, <b>formule</b> (P(x)) je tvrzení. <span class="f">f(P(x))</span> ani <span class="f">¬f(x)</span> nejsou dobře utvořené.</li>
+</ul>
+
+<h2 id="indukce">Indukce <span class="tag">přednáška 13. 11.</span></h2>
+<ul>
+<li><b>Báze</b>: dokážeš pro nejmenší případ (φ(0)). <b>Indukční krok</b>: z φ(n) (<b>indukční předpoklad</b>) dokážeš φ(n+1).</li>
+<li>Silná verze: z platnosti pro <b>všechna i &lt; n</b> dokážeš φ(n).</li>
+<li>Korektní induktivní definice musí mít bázi a <b>každý řetěz zmenšování musí skončit</b>. Proto je špatně f: ℤ → ℤ přes f(x−1) (záporná čísla nikdy nekončí) a g: ℝ⁺ → ℝ přes g(x/2).</li>
+<li><b>Příklady:</b> <span class="f">S(n) = 0+1+…+n = n(n+1)/2</span>; strom o n vrcholech má <b>n − 1</b> hran; Hanojské věže potřebují <b>2ⁿ − 1</b> tahů.</li>
+<li><b>Odebírací hra</b> (bere se 1–3 sirky, kdo vezme poslední, vyhrává): <b>P-pozice</b> (prohrává ten, kdo je na tahu) jsou právě <b>n mod 4 = 0</b>. N-pozice = jde táhnout do P-pozice. 0 sirek je P-pozice.</li>
+<li><b>Strukturální indukce</b>: z 1 kroky x→x−3 a x→x² zůstává vždy <span class="f">x mod 3 = 1</span>, proto se na 2 nedostaneš.</li>
+</ul>
+
+<h2 id="vl">Rychlé opakování výrokové logiky</h2>
+<div class="tw"><table>
+<tr><th>p</th><th>q</th><th>¬p</th><th>p ∧ q</th><th>p ∨ q</th><th>p ⊃ q</th><th>p ≡ q</th></tr>
+<tr><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td></tr>
+<tr><td>0</td><td>1</td><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td></tr>
+<tr><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td><td class="hl">0</td><td>0</td></tr>
+<tr><td>1</td><td>1</td><td>0</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+</table></div>
+<ul>
+<li><span class="f">p ⊃ q ≡ ¬p ∨ q ≡ ¬q ⊃ ¬p</span> (obměna). <span class="f">q ⊃ p</span> ekvivalentní <b>není</b>.</li>
+<li>De Morgan: <span class="f">¬(p ∧ q) ≡ ¬p ∨ ¬q</span>, <span class="f">¬(p ∨ q) ≡ ¬p ∧ ¬q</span>.</li>
+<li><span class="f">A, B, C ⊨ D</span> ⟺ <span class="f">(A ⊃ (B ⊃ (C ⊃ D)))</span> je tautologie ⟺ <span class="f">A ∧ B ∧ C ∧ ¬D</span> je nesplnitelná.</li>
+<li><b>Metoda sémantického sporu</b> (test 1): předpokládáš, že formule je nepravdivá. Spor → tautologie. Bez sporu → našel jsi ohodnocení, kde je nepravdivá (u úsudku: premisy 1, závěr 0).</li>
+</ul>
+
+<h2 id="cviceni">Cvičný test 3</h2>
+<p>Varianty A a B jsou ve stejném formátu jako tvoje testy: 3 otázky, a–d. Pak následuje další procvičování. Klikni P (pravda) nebo N (nepravda), hned uvidíš vysvětlení. Skóre se počítá +1 / −1.</p>
+<div id="quiz"></div>
+<div class="score" role="status"><span id="scoreText">Skóre: 0 · zodpovězeno 0 z 0</span><button type="button" id="reset">Začít znovu</button></div>
+
+<h2 id="navic">Navíc: hradla a Karnaughovy mapy</h2>
+<p><b>Ve cvičeních ULM 2–9 to není</b>, takže to na tomto testu nejspíš nebude. Jen pro jistotu:</p>
+<div class="gates">
+  <div class="gate"><svg viewBox="0 0 120 60" aria-hidden="true"><path d="M5 20H30M5 40H30M30 8H58A22 22 0 0 1 58 52H30Z M80 30H115"/></svg><b>AND</b><small>a · b</small></div>
+  <div class="gate"><svg viewBox="0 0 120 60" aria-hidden="true"><path d="M5 20H34M5 40H34M28 8Q60 8 82 30Q60 52 28 52Q40 30 28 8Z M82 30H115"/></svg><b>OR</b><small>a + b</small></div>
+  <div class="gate"><svg viewBox="0 0 120 60" aria-hidden="true"><path d="M5 30H32M32 10L72 30L32 50Z M86 30H115"/><circle cx="79" cy="30" r="6"/></svg><b>NOT</b><small>¬a</small></div>
+  <div class="gate"><svg viewBox="0 0 120 60" aria-hidden="true"><path d="M5 20H30M5 40H30M30 8H58A22 22 0 0 1 58 52H30Z M92 30H115"/><circle cx="86" cy="30" r="6"/></svg><b>NAND</b><small>¬(a · b)</small></div>
+  <div class="gate"><svg viewBox="0 0 120 60" aria-hidden="true"><path d="M5 20H34M5 40H34M28 8Q60 8 82 30Q60 52 28 52Q40 30 28 8Z M94 30H115"/><circle cx="88" cy="30" r="6"/></svg><b>NOR</b><small>¬(a + b)</small></div>
+  <div class="gate"><svg viewBox="0 0 120 60" aria-hidden="true"><path d="M5 20H30M5 40H30M30 8Q62 8 84 30Q62 52 30 52Q42 30 30 8Z M21 8Q33 30 21 52 M84 30H115"/></svg><b>XOR</b><small>a ⊕ b</small></div>
+</div>
+<ul>
+<li><span class="f">∑m</span> = řádky, kde F = 1; <span class="f">∏M</span> = řádky, kde F = 0; d / D = nezáleží.</li>
+<li>Karnaughova mapa: popisky v pořadí 00, 01, 11, 10, okraje sousedí, skupiny 1/2/4/8, co největší.</li>
+<li>Jen NAND: <span class="f">AB + CD = NAND(NAND(A,B), NAND(C,D))</span>, NOT = <span class="f">NAND(a,a)</span>.</li>
+</ul>
+</div>
+
+<script>
+const G=[
+ ["Cvičný test 3 · varianta A",[
+  ["Skolemova klauzulární forma formule ∀x∃y∀z P(x,y,z) je:",[
+   ["∀x∀z P(x, f(x), z)",1,"Před ∃y je jen ∀x, takže y nahradí f(x)."],
+   ["∀x∀z P(x, a, z)",0,"Konstanta jen tehdy, když před ∃ není žádné ∀. Tady je ∀x."],
+   ["∀x∀z P(x, f(z), z)",0,"∀z je až za ∃y, y na z nezávisí."],
+   ["Skolemizace zachovává splnitelnost, ale ne logickou ekvivalenci.",1,"Krok 7 (a krok 1) zachovává jen splnitelnost."]]],
+  ["Unifikace literálů P(x, f(y), b) a P(a, z, y):",[
+   ["Literály lze unifikovat.",1,"x/a, z/f(y), y/b."],
+   ["Unifikátor obsahuje y/b.",1,"Třetí pozice: b vs y, dosadí se y/b."],
+   ["Výsledkem je P(a, f(b), b).",1,"Po dosazení y/b se z = f(y) změní na f(b)."],
+   ["Nelze je unifikovat, protože b je konstanta.",0,"Konstantu nedosazujeme, ale proměnnou y za ni dosadit lze."]]],
+  ["Při převodu formule do Skolemovy klauzulární formy (9 kroků):",[
+   ["Eliminace existenčních kvantifikátorů je ekvivalentní úprava.",0,"Skolemizace zachovává jen splnitelnost."],
+   ["Existenční uzávěr formule zachovává splnitelnost.",1,"Krok 1, zachovává splnitelnost."],
+   ["Přesun negace dovnitř je ekvivalentní krok.",1,"Krok 5, De Morgan a negace kvantifikátorů."],
+   ["Distributivní zákony se použijí až v posledním kroku.",1,"Krok 9, převod do konjunkce klauzulí."]]]
+ ]],
+ ["Cvičný test 3 · varianta B",[
+  ["Rezoluční metoda v PL1 (nepřímý důkaz):",[
+   ["Při ověřování platnosti úsudku negujeme závěr.",1,"Důkaz sporem: premisy + negace závěru."],
+   ["Odvození prázdné klauzule znamená, že úsudek neplatí.",0,"Naopak, prázdná klauzule = spor = úsudek platí."],
+   ["Z klauzulí ¬P(x) ∨ Q(x) a P(a) vznikne rezolventa Q(a).",1,"Unifikace x/a, P(a) a ¬P(a) se vyruší."],
+   ["Klauzule P(a) a ¬P(b) lze rezolvovat, protože jde o stejný predikát.",0,"a a b jsou různé konstanty, nelze je unifikovat."]]],
+  ["Úsudek: Všechny dřevěné stoly jsou stoly. Všechny dřevěné stoly jsou ze dřeva. ⊢ Některé stoly jsou ze dřeva.",[
+   ["Úsudek je platný.",0,"Učitelovo řešení: nevyplývá."],
+   ["Premisy nezaručují, že nějaký dřevěný stůl existuje.",1,"Proto nejde odvodit závěr s ∃."],
+   ["Přidáním premisy ∃x D(x) se úsudek stane platným.",1,"Pak D(c), S(c), R(c), a spor s ¬S(z) ∨ ¬R(z)."],
+   ["Závěr se formalizuje ∃x (S(x) ∧ R(x)).",1,"∃ se pojí s ∧."]]],
+  ["Vennovy diagramy a úsudky:",[
+   ["„Všichni psi koušou. Alík není pes. ⊢ Alík nekouše.“ je platný úsudek.",0,"O tom, co není pes, premisa nic neříká."],
+   ["„Žádné sudé číslo není liché. Některá lichá čísla jsou prvočísla. ⊢ Některá prvočísla nejsou sudá.“ je platný úsudek.",1,"× v Lichá∩Prvočísla, kde sudá být nemohou."],
+   ["Premisu „Všechna A jsou B“ zakreslíme vyšrafováním části A, která leží mimo B.",1,"Ta oblast musí být prázdná."],
+   ["Premisu „Některá A jsou B“ zakreslíme vyšrafováním průniku A a B.",0,"Šrafování = prázdné. Existenci kreslíme × do průniku."]]]
+ ]],
+ ["Další procvičování",[
+  ["Skolemizace ∃x∀y∃z P(x, y, z):",[
+   ["∀y P(a, y, f(y))",1,"x je bez ∀ před sebou → konstanta, z závisí na y."],
+   ["∀y P(a, y, b)",0,"z je za ∀y, musí to být funkce f(y)."],
+   ["∀y P(f(y), y, a)",0,"x je první, na y nezávisí."],
+   ["Každé ∃ dostane nový Skolemův symbol.",1,"Nesmíš použít konstantu nebo funkci, která už ve formuli je."]]],
+  ["Skolemizace ∀x∀y∃z P(x, y, z):",[
+   ["∀x∀y P(x, y, f(x, y))",1,"z závisí na obou ∀ před ním."],
+   ["∀x∀y P(x, y, f(x))",0,"Chybí y."],
+   ["∀x∀y P(x, y, a)",0,"Před ∃z jsou ∀, konstanta nestačí."],
+   ["V klauzulární formě se ∀ obvykle vynechávají.",1,"Všechny proměnné jsou implicitně ∀."]]],
+  ["Unifikace P(x, b, f(x)) a P(a, y, f(y)):",[
+   ["Literály lze unifikovat.",0,"x/a a y/b dají f(a) vs f(b)."],
+   ["Problém je, že by se musely rovnat konstanty a a b.",1,"Přesně tak."],
+   ["Unifikátor {x/a, y/b} je řešení.",0,"Po dosazení zůstane f(a) ≠ f(b)."],
+   ["Dvě různé konstanty nelze nikdy unifikovat.",1,"Dosazuje se jen za proměnné."]]],
+  ["Úsudek: Každý počítač je stroj. Každý počítač má procesor. ⊢ Některé stroje mají procesor.",[
+   ["Úsudek je platný.",0,"Premisy s ∀ nezaručují existenci počítače."],
+   ["Ve Vennově diagramu nemáme kam dát ×.",1,"Žádná premisa neříká „některé“."],
+   ["Platný by byl po přidání „Existuje počítač“.",1,"Pak je × v Počítač ⊆ Stroj ∩ Procesor."],
+   ["Závěr je ∀x (S(x) ⊃ P(x)).",0,"„Některé“ = ∃x (S(x) ∧ P(x))."]]],
+  ["Negace „Každý student napsal test“ (S, T):",[
+   ["∃x (S(x) ∧ ¬T(x))",1,"¬∀x(S ⊃ T) ≡ ∃x(S ∧ ¬T)."],
+   ["∀x (S(x) ⊃ ¬T(x))",0,"To je „Žádný student nenapsal test“."],
+   ["¬∀x (S(x) ⊃ T(x))",1,"Doslovná negace."],
+   ["∃x (S(x) ⊃ ¬T(x))",0,"∃ se pojí s ∧."]]],
+  ["Indukce:",[
+   ["V indukčním kroku předpokládáme φ(n) a dokazujeme φ(n+1).",1,"φ(n) je indukční předpoklad."],
+   ["Definice f: ℤ → ℤ, kde f(x) je definováno pomocí f(x−1), je korektní.",0,"Do záporných čísel by se klesalo donekonečna."],
+   ["Hanojské věže s n disky potřebují minimálně 2ⁿ − 1 tahů.",1,"P(n) = 2P(n−1) + 1."],
+   ["Strom o n vrcholech má n hran.",0,"Má n − 1 hran."]]],
+  ["Odebírací hra: bere se 1, 2 nebo 3 sirky, kdo vezme poslední, vyhrává.",[
+   ["Pozice s 0 sirkami je P-pozice.",1,"Hráč na tahu už prohrál."],
+   ["Pozice s 8 sirkami je P-pozice.",1,"8 mod 4 = 0."],
+   ["Pozice se 6 sirkami je P-pozice.",0,"6 mod 4 = 2, je to N-pozice (vezmi 2, soupeř má 4)."],
+   ["N-pozice je taková, ze které jde táhnout do P-pozice.",1,"Definice z přednášky."]]],
+  ["Zápis A, B, C ⊨ D (z testu 1):",[
+   ["Formule D logicky vyplývá z A, B a C.",1,"To je význam ⊨."],
+   ["(A ⊃ (B ⊃ (C ⊃ D))) je tautologie.",1,"Věta o dedukci."],
+   ["Platí A, B ⊨ (C ∧ D).",0,"C nemusí z A, B plynout."],
+   ["Platí ⊨ (((A ⊃ B) ⊃ C) ⊃ D).",0,"Závorky jsou jinak, to není totéž."]]]
+ ]]
+];
+const quiz=document.getElementById('quiz'),scoreText=document.getElementById('scoreText');
+let score=0,done=0,total=0;
+const L='abcd';
+function upd(){scoreText.textContent=`Skóre: ${score} · zodpovězeno ${done} z ${total}`}
+function build(){
+  quiz.innerHTML='';score=0;done=0;total=0;let qn=0;
+  G.forEach(([gname,qs],gi)=>{
+    const gh=document.createElement('div');gh.className='qgroup';gh.textContent=gname;quiz.appendChild(gh);
+    qs.forEach((q,qi)=>{
+      qn++;
+      const d=document.createElement('div');d.className='q';
+      const h=document.createElement('h4');h.textContent=`${qi+1}. otázka · ${q[0]}`;d.appendChild(h);
+      q[1].forEach((it,ii)=>{
+        total++;
+        const row=document.createElement('div');row.className='item';
+        const t=document.createElement('div');t.className='txt';
+        t.innerHTML=`<span>${L[ii]})</span> <span class="fb">${it[0]}</span>`;
+        const b=document.createElement('div');b.className='btns';
+        const why=document.createElement('div');why.className='why';why.hidden=true;
+        [['P',1],['N',0]].forEach(([lab,val])=>{
+          const btn=document.createElement('button');btn.type='button';btn.id=`g${gi}q${qi}i${ii}${lab}`;btn.textContent=lab;
+          btn.setAttribute('aria-label',(lab==='P'?'Pravda':'Nepravda')+` – ${gname}, otázka ${qi+1}, možnost ${L[ii]}`);
+          btn.addEventListener('click',()=>{
+            const ok=val===it[1];score+=ok?1:-1;done++;
+            row.classList.add(ok?'right':'wrong');
+            why.innerHTML=`<b>${ok?'+1 Správně':'−1 Špatně'}.</b> Je to ${it[1]?'PRAVDA':'NEPRAVDA'}. ${it[2]}`;
+            why.hidden=false;b.querySelectorAll('button').forEach(x=>x.disabled=true);upd();
+          });
+          b.appendChild(btn);
+        });
+        row.append(t,b,why);d.appendChild(row);
+      });
+      quiz.appendChild(d);
+    });
+  });
+  upd();
+}
+document.getElementById('reset').addEventListener('click',build);
+build();
+</script>

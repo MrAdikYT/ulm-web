@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Teorie a pojmy</title>
+<link rel="stylesheet" href="../assets/course.css">
+<style>td .f{font-size:1.06em} td:first-child{white-space:nowrap;font-weight:600}</style>
+</head>
+<body>
+<main>
+<nav class="crumbs"><a href="../index.html">← Rozcestník</a> · <a href="rezoluce-postup.html">Postup rezoluce</a> · <a href="pravidla-prepisu.html">Pravidla přepisu</a></nav>
+<header class="lesson">
+<div class="kicker">ULM · reference</div>
+<h1>Teorie: pojmy pro otázky typu „X říká, že…“</h1>
+<p class="lede">Na testu bývá otázka, kde u definice rozhoduješ P/N. Tady jsou správná znění a typické podvrhy.</p>
+</header>
+
+<h2>A. Vlastnosti formule</h2>
+<table>
+<tr><th>pojem</th><th>znamená</th><th>pozor</th></tr>
+<tr><td>logicky platná (⊨ A, tautologie)</td><td>pravdivá v <b>každé</b> interpretaci a ohodnocení</td><td>⊨ A ⇔ ¬A je nesplnitelná</td></tr>
+<tr><td>splnitelná</td><td>pravdivá v <b>aspoň jedné</b> interpretaci (pro nějaké ohodnocení)</td><td>platná ⇒ splnitelná, opačně ne</td></tr>
+<tr><td>nesplnitelná (kontradikce)</td><td>nepravdivá ve všech, <b>nemá model</b></td><td>A nesplnitelná ⇔ ¬A platná</td></tr>
+<tr><td>model formule</td><td>interpretace, ve které je pravdivá (pro všechna ohodnocení)</td><td></td></tr>
+<tr><td>A ≡ B ekvivalentní</td><td>mají stejnou pravdivostní hodnotu v každé interpretaci</td><td>⇔ ⊨ A ≡ B</td></tr>
+</table>
+
+<h2>B. Logické vyplývání</h2>
+<p><span class="f">A₁, …, Aₙ ⊨ Z</span> říká: <b>v každé interpretaci, ve které jsou pravdivé všechny předpoklady, je pravdivý i závěr Z</b> (Z je pravdivá v každém modelu předpokladů).</p>
+<table>
+<tr><th>ekvivalentně</th><th></th></tr>
+<tr><td>formule</td><td><span class="f">(A₁ ∧ … ∧ Aₙ) ⊃ Z</span> je logicky platná</td></tr>
+<tr><td>věta o dedukci</td><td><span class="f">A₁, …, Aₙ₋₁ ⊨ Aₙ ⊃ Z</span></td></tr>
+<tr><td>spor</td><td>množina <span class="f">{A₁, …, Aₙ, ¬Z}</span> je <b>nesplnitelná</b> (na tom stojí rezoluce sporem)</td></tr>
+</table>
+<div class="box trap">
+<p><b>Typické podvrhy (NEPRAVDA):</b></p>
+<p>✗ „Z je pravdivá v každé interpretaci.“ To by bylo ⊨ Z, ne vyplývání.</p>
+<p>✗ „Množina {A₁, …, Aₙ, Z} je nesplnitelná.“ Musí tam být <b>¬Z</b>.</p>
+<p>✗ „Když předpoklady nejsou pravdivé, Z nevyplývá.“ Sporné předpoklady ⇒ vyplývá <b>cokoli</b>.</p>
+</div>
+
+<h2>C. Metody</h2>
+<table>
+<tr><td>sémantický spor (tabla)</td><td>Předpokládám, že formule <b>není</b> platná (neguji ji), a hledám spor. Spor ve všech větvích ⇒ formule <b>je platná</b>. α rozkládám pod sebe, β větvím.</td></tr>
+<tr><td>rezoluce sporem</td><td>Předpoklady + <b>negovaný závěr</b> → klauzule → odvodím # ⇒ úsudek platný. Korektní a úplná (pro nesplnitelnost), ale v PL1 nemusí skončit.</td></tr>
+<tr><td>Vennovy diagramy</td><td>Jen pro úsudky s <b>unárními</b> predikáty (vlastnosti, množiny). Vztahy jako R(x, y) do Venna nejdou.</td></tr>
+</table>
+
+<h2>D. Skolemova klauzulární forma</h2>
+<table>
+<tr><td>co zachovává</td><td><b>splnitelnost</b> (A splnitelná ⇔ její forma splnitelná), <b>ne</b> ekvivalenci</td></tr>
+<tr><td>proč ne ekvivalenci</td><td>kroky 1 (∃ uzávěr) a 7 (Skolemizace) mění formuli; ostatní kroky jsou ekvivalentní úpravy</td></tr>
+<tr><td>výsledek</td><td>jen ∀ (často nepíšeme), uvnitř konjunkce klauzulí, klauzule = disjunkce literálů</td></tr>
+<tr><td>literál</td><td>atom nebo negovaný atom: <span class="f">P(x)</span>, <span class="f">¬Q(a, y)</span></td></tr>
+<tr><td>prázdná klauzule #</td><td>nemá žádný literál, je nesplnitelná</td></tr>
+</table>
+
+<h2>E. PL1 obecně</h2>
+<table>
+<tr><td>volná proměnná</td><td>není vázaná žádným kvantifikátorem (<span class="f">P(x)</span> bez ∀x / ∃x)</td></tr>
+<tr><td>uzavřená formule</td><td>nemá žádné volné proměnné</td></tr>
+<tr><td>term</td><td>proměnná, konstanta nebo funkce aplikovaná na termy: x, a, f(x, b)</td></tr>
+<tr><td>rozhodnutelnost</td><td>výroková logika je rozhodnutelná, <b>PL1 jen částečně</b> (platnost lze potvrdit, neplatnost ne vždy)</td></tr>
+</table>
+</main>
+</body>
+</html>
